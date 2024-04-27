@@ -6,10 +6,10 @@ namespace Threat_o_tron;
 
 class Guard : IObstacle{
     /// <summary>
-    /// XOrigin and YOrigin is the guard's location in the game
+    /// GuardGameX and GuardGameY is the guard's location in the game
     /// </summary>
-    private int XOrigin{get; set;}
-    private int YOrigin{get; set;}
+    private int GuardGameX{get; set;}
+    private int GuardGameY{get; set;}
 
     /// <summary>
     /// Instantiates a new Guard.
@@ -17,8 +17,8 @@ class Guard : IObstacle{
     /// <param name="x">The X Coordinate of the Guard in the game.</param>
     /// <param name="y">The Y Coordinate of the Guard in the game.</param>
     public Guard(int x, int y){
-        XOrigin = x;
-        YOrigin = y;
+        GuardGameX = x;
+        GuardGameY = y;
     }
 
     /// <summary>
@@ -28,9 +28,9 @@ class Guard : IObstacle{
     /// <returns></returns>
     public void drawOnMap(Map map){
         //where to plot the symbol on the map
-        map.FindPointOnMap(XOrigin,YOrigin, out int x, out int y);
+        map.FindPointOnMap(GuardGameX,GuardGameY, out int guardMapX, out int guardMapY);
         //check to see if the guard will be on the proposed map and plot it if it is.
-        map.CheckAndPlot(x, y, 'G');
+        map.CheckAndPlot(guardMapX, guardMapY, 'G');
 
     }
 }

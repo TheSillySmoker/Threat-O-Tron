@@ -4,8 +4,8 @@ using System.Security.Cryptography;
 namespace Threat_o_tron;
 
 class Check : Map{
-    private int AgentX{get;set;}
-    private int AgentY{get;set;}
+    private int AgentGameX{get;set;}
+    private int AgentGameY{get;set;}
     private int AgentMapX{get;set;}
     private int AgentMapY{get;set;}
 
@@ -16,9 +16,9 @@ class Check : Map{
     /// <param name="southWestY"></param>
     /// <param name="game"></param>
     public Check(int southWestX, int southWestY, Game game) : base(southWestX, southWestY, 3, 3, game.obstacles){
-        AgentX = southWestX+1;
-        AgentY = southWestY+1;
-        FindPointOnMap(AgentX,AgentY, out int agentMapX, out int agentMapY);
+        AgentGameX = southWestX+1;
+        AgentGameY = southWestY+1;
+        FindPointOnMap(AgentGameX,AgentGameY, out int agentMapX, out int agentMapY);
         AgentMapX = agentMapX;
         AgentMapY = agentMapY;
     }

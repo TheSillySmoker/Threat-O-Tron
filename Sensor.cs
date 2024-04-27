@@ -3,21 +3,21 @@ namespace Threat_o_tron;
 class Sensor : IObstacle
 {
     /// <summary>
-    /// XOrigin and YOrigin is the location of the Centre of the Sensor
+    /// SensorGameX and SensorGameY is the location of the Centre of the Sensor
     /// /// </summary>
-    private int XOrigin{get; set;}
-    private int YOrigin{get; set;}
+    private int SensorGameX{get; set;}
+    private int SensorGameY{get; set;}
     private float Radius{get; set;}
 
 
     public Sensor(int x, int y, float radius){
-        XOrigin = x;
-        YOrigin = y;
+        SensorGameX = x;
+        SensorGameY = y;
         Radius = radius;
     }
     public void drawOnMap(Map map)
     {
-        map.FindPointOnMap(XOrigin, YOrigin, out int xStart, out int yStart);
+        map.FindPointOnMap(SensorGameX, SensorGameY, out int xStart, out int yStart);
 
         int roundedRadius = RoundFloatToInt(Radius);
 
