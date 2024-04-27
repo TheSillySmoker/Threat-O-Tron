@@ -55,6 +55,7 @@ static class Program
                 break;
                 case "PATH":
                 //add path
+                Console.WriteLine("This has not been built yet. \nComing soon...");
                 break;
                 case "EXIT":
                     Console.WriteLine("Thank you for using the Threat-o-tron 9000.");
