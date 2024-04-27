@@ -62,3 +62,10 @@ C:/Users/Mark Schroeder/OneDrive - Queensland University of Technology/QUT/CAB20
 /Users/markschroeder/Documents/GitHub/Threat-O-Tron/obj/Debug/net8.0/Threat-o-tron.dll
 /Users/markschroeder/Documents/GitHub/Threat-O-Tron/obj/Debug/net8.0/refint/Threat-o-tron.dll
 /Users/markschroeder/Documents/GitHub/Threat-O-Tron/obj/Debug/net8.0/Threat-o-tron.pdb
+/Users/markschroeder/Documents/GitHub/Threat-O-Tron/bin/Debug/net8.0/Threat-o-tron
+/Users/markschroeder/Documents/GitHub/Threat-O-Tron/bin/Debug/net8.0/Threat-o-tron.deps.json
+/Users/markschroeder/Documents/GitHub/Threat-O-Tron/bin/Debug/net8.0/Threat-o-tron.runtimeconfig.json
+/Users/markschroeder/Documents/GitHub/Threat-O-Tron/bin/Debug/net8.0/Threat-o-tron.dll
+/Users/markschroeder/Documents/GitHub/Threat-O-Tron/bin/Debug/net8.0/Threat-o-tron.pdb
+/Users/markschroeder/Documents/GitHub/Threat-O-Tron/obj/Debug/net8.0/Threat-o-tron.genruntimeconfig.cache
+/Users/markschroeder/Documents/GitHub/Threat-O-Tron/obj/Debug/net8.0/ref/Threat-o-tron.dll
