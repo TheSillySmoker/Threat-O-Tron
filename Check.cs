@@ -56,7 +56,9 @@ class Check : Map{
         }
         return false;    
     }
-
+    /// <summary>
+    /// Prints out all the safe directions the agent can go.
+    /// </summary>
     public void PrintSafeDirections(){
         //check the agents location
         if(!CheckSafe(AgentMapX,AgentMapY)){
