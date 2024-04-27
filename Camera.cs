@@ -19,7 +19,8 @@ class Camera : IObstacle
     /// <param name="x">The X Coordinate of the camera in the game.</param>
     /// <param name="y">The Y Coordinate of the camera in the game.</param>
     /// <param name="orientation"></param>
-    public Camera(int x, int y, string orientation){
+    public Camera(int x, int y, string orientation)
+    {
         CameraGameX = x;
         CameraGameY = y;
         Orientation = orientation;        
@@ -59,9 +60,11 @@ class Camera : IObstacle
         int x;
         int y;             
         //count how many spaces there are ABOVE the starting corrdinate and loop through them   
-        for(int i = 0; i < YStartOnMap+1; i++){
+        for(int i = 0; i < YStartOnMap+1; i++)
+        {
             //in each layer above the start point, plot all the available spaces that are above this for both the right and left side.
-            for(int ii = 0; ii < YStartOnMap+1 - i; ii++){
+            for(int ii = 0; ii < YStartOnMap+1 - i; ii++)
+            {
                     x = XStartOnMap+i;
                     y = YStartOnMap-ii-i;
                     map.CheckAndPlot(x, y, 'C');
@@ -76,13 +79,16 @@ class Camera : IObstacle
     /// Draws a triange pointing East on the given map.
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
-    private void DrawEastCamera(Map map){
+    private void DrawEastCamera(Map map)
+    {
         int x;
         int y;                   
         //count how many spaces there are East of the starting corrdinate and loop through them   
-        for(int i = 0; i < map.SizeX - XStartOnMap; i++){
+        for(int i = 0; i < map.SizeX - XStartOnMap; i++)
+        {
             //in each layer above the east of the starting point, plot all the available spaces that are east of this for both above and below.
-            for(int ii = 0; ii < map.SizeX - XStartOnMap + i+1; ii++){
+            for(int ii = 0; ii < map.SizeX - XStartOnMap + i+1; ii++)
+            {
                 y = YStartOnMap+i;
                 x = XStartOnMap+ii+i;
                 map.CheckAndPlot(x, y, 'C');
@@ -97,13 +103,16 @@ class Camera : IObstacle
     /// Draws a triange pointing South on the given map.
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
-    private void DrawSouthCamera(Map map){
+    private void DrawSouthCamera(Map map)
+    {
         int x;
         int y;                   
         //count how many spaces there are BELOW the starting corrdinate and loop through them   
-        for(int i = 0; i < map.SizeY - YStartOnMap; i++){
+        for(int i = 0; i < map.SizeY - YStartOnMap; i++)
+        {
             //in each layer BELOW the start point, plot all the available spaces that are BELOW this for both the right and left side.
-            for(int ii = 0; ii < map.SizeY - YStartOnMap + i+1; ii++){
+            for(int ii = 0; ii < map.SizeY - YStartOnMap + i+1; ii++)
+            {
                 x = XStartOnMap+i;
                 y = YStartOnMap+ii+i;
                 map.CheckAndPlot(x, y, 'C');
@@ -118,13 +127,16 @@ class Camera : IObstacle
     /// Draws a triange pointing West on the given map.
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
-    private void DrawWestCamera(Map map){
+    private void DrawWestCamera(Map map)
+    {
         int x;
         int y;              
         //count how many spaces to the WEST there are from the starting corrdinate and loop through them   
-        for(int i = 0; i < XStartOnMap+1; i++){
+        for(int i = 0; i < XStartOnMap+1; i++)
+        {
             //in each layer WEST of the start point, plot all the available spaces that are west of this for both above and below.
-            for(int ii = 0; ii < XStartOnMap+1 - i; ii++){
+            for(int ii = 0; ii < XStartOnMap+1 - i; ii++)
+            {
                     y = YStartOnMap+i;
                     x = XStartOnMap-ii-i;
                     map.CheckAndPlot(x, y, 'C');

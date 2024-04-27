@@ -18,13 +18,16 @@ static class Program
     /// </summary>
     /// <param name="inputMessage">What do you want the user to read before they input text</param>
     /// <returns>User input string or a defualt "EMPTY INPUT" if the user does not enter anything.</returns>
-    public static string ReadString(string inputMessage = ""){
+    public static string ReadString(string inputMessage = "")
+    {
         Console.WriteLine(inputMessage);
         string? output = Console.ReadLine();
-        if (output != null){
+        if (output != null)
+        {
             return output;
         }
-        else{
+        else
+        {
             return "EMPTY INPUT";
         }
     }
@@ -32,18 +35,21 @@ static class Program
     /// <summary>
     /// Starts a game by welcoming the user and asking them to enter a command; filters the first argument given by the user.
     /// </summary>
-    public static void StartGame(){
+    public static void StartGame()
+    {
         bool exiting = false;
         Game game = new Game();
         Console.WriteLine("Welcome to the Threat-o-tron 9000 Obstacle Avoidance System.\n");
         printValidCommands();
         //get a valid input
-        do{
+        do
+        {
             string inputMessage = ReadString("Enter Command:");
             //Make all inputs from the user not case sensitive
             string[] inputMessageArguments = inputMessage.ToUpper().Split(' ');
             //Filter the first argument/command given by the user
-            switch (inputMessageArguments[0]){
+            switch (inputMessageArguments[0])
+            {
                 case "ADD":
                     game.Add(inputMessageArguments); 
                     break;
@@ -76,7 +82,8 @@ static class Program
     /// <summary>
     /// Writes the valid commands a user can input in the command line interface.
     /// </summary>
-    public static void printValidCommands(){
+    public static void printValidCommands()
+    {
         Console.WriteLine("Valid commands are:\nadd guard <x> <y>: registers a guard obstacle\nadd fence <x> <y> <orientation> <length>: registers a fence obstacle. Orientation must be 'east' or 'north'.\nadd sensor <x> <y> <radius>: registers a sensor obstacle\nadd camera <x> <y> <direction>: registers a camera obstacle. Direction must be 'north', 'south', 'east' or 'west'.\ncheck <x> <y>: checks whether a location and its surroundings are safe\nmap <x> <y> <width> <height>: draws a text-based map of registered obstacles\npath <agent x> <agent y> <objective x> <objective y>: finds a path free of obstacles\nhelp: displays this help message\nexit: closes this program\n");
     }
 }

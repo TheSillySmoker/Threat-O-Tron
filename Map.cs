@@ -21,7 +21,8 @@ class Map{
     /// <param name="southWestY">The game's Y coordinate for the most SouthWest point of the map.</param>
     /// <param name="sizeX">The width of the map.</param>
     /// <param name="sizeY">The height of the map.</param>
-    public Map(int southWestX, int southWestY, int sizeX, int sizeY, List<IObstacle> obstacles){
+    public Map(int southWestX, int southWestY, int sizeX, int sizeY, List<IObstacle> obstacles)
+    {
         SouthWestX = southWestX;
         SouthWestY = southWestY;
         SizeX = sizeX;
@@ -30,16 +31,18 @@ class Map{
 
         PopulateCanvas('.');
 
-        foreach (IObstacle obstacle in obstacles){
+        foreach (IObstacle obstacle in obstacles)
+        {
             obstacle.drawOnMap(this);
         }
     }
 
     /// <summary>
-    /// Populates the Canvas array property with a specific character.
+    /// Populates the Canvas array property with a specified character.
     /// </summary>
     /// <param name="character">The character that will fill the blank Canvas.</param>
-    private void PopulateCanvas(char character){
+    private void PopulateCanvas(char character)
+    {
         for (int i = 0; i < SizeY; i++)
         {
             for (int ii = 0; ii < SizeX; ii++)
@@ -69,8 +72,10 @@ class Map{
     /// <param name="xOrigin">X corrdinate of Obstacle in the game.</param>
     /// <param name="yOrigin">Y coordinate of Obstacle in the game.</param>
     /// <returns>True or false whether the map contains the given point.</returns>
-    public bool ContainsPoint(int xOrigin, int yOrigin){
-        if(xOrigin <= SizeX-1 && xOrigin >= 0 && yOrigin <= SizeY-1 && yOrigin >= 0){
+    public bool ContainsPoint(int xOrigin, int yOrigin)
+    {
+        if(xOrigin <= SizeX-1 && xOrigin >= 0 && yOrigin <= SizeY-1 && yOrigin >= 0)
+        {
             return true;
         }
         return false;
@@ -83,7 +88,8 @@ class Map{
     /// <param name="yOrigin">Y coordinate of Obstacle in the game.</param>
     /// <param name="mapX">The start X coordinate of the obstacle on the map.</param>
     /// <param name="mapY">The start Y coordinate of the obstacle on the map.</param>
-    public void FindPointOnMap(int xOriginOfObstacle, int yOriginOfObstacle, out int mapX, out int mapY){
+    public void FindPointOnMap(int xOriginOfObstacle, int yOriginOfObstacle, out int mapX, out int mapY)
+    {
         mapY = SizeY-1 - (yOriginOfObstacle - SouthWestY);
         mapX = xOriginOfObstacle - SouthWestX ;
     }
@@ -94,7 +100,8 @@ class Map{
     /// <param name="x">X coordinate on the map's canvas that will be plotted.</param>
     /// <param name="y">Y coordinate on the map's canvas that will be plotted.</param>
     /// <param name="character">The character that will be plotted on the map.</param>
-    public void CheckAndPlot(int x, int y, char character){
+    public void CheckAndPlot(int x, int y, char character)
+    {
     if (ContainsPoint(x,y)) Canvas[y,x] = character;
     }
 }
