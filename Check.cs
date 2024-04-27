@@ -22,19 +22,22 @@ class Check : Map{
         AgentMapX = agentMapX;
         AgentMapY = agentMapY;
     }
-
+    /// <summary>
+    /// Gets all the directions the agent can move to safely.
+    /// </summary>
+    /// <returns>A list of strings (directions).</returns>
     public List<string> GetSafeDirections(){
         List<string> safeDirections = new List<string>();
-        if(CheckSafe(AgentMapX, AgentMapY-1)){
+        if(CheckIfSafe(AgentMapX, AgentMapY-1)){
             safeDirections.Add("North");
         }
-        if(CheckSafe(AgentMapX, AgentMapY+1)){
+        if(CheckIfSafe(AgentMapX, AgentMapY+1)){
             safeDirections.Add("South");
         }
-        if(CheckSafe(AgentMapX+1, AgentMapY)){
+        if(CheckIfSafe(AgentMapX+1, AgentMapY)){
             safeDirections.Add("East");
         }
-        if(CheckSafe(AgentMapX-1, AgentMapY)){
+        if(CheckIfSafe(AgentMapX-1, AgentMapY)){
             safeDirections.Add("West");
         }
         return safeDirections;
@@ -46,7 +49,7 @@ class Check : Map{
     /// <param name="x">The X coordinate of the map that will be checked.</param>
     /// <param name="y">The Y coordinate of the map that will be checked.</param>
     /// <returns>True or false if the given coordinate is safe.</returns>
-    private bool CheckSafe(int x, int y){
+    private bool CheckIfSafe(int x, int y){
         if(!ContainsPoint(x,y)){
             throw new ArgumentException("Your x and y should be in the map you have created");
         }
@@ -61,7 +64,7 @@ class Check : Map{
     /// </summary>
     public void PrintSafeDirections(){
         //check the agents location
-        if(!CheckSafe(AgentMapX,AgentMapY)){
+        if(!CheckIfSafe(AgentMapX,AgentMapY)){
         Console.WriteLine("Agent, your location is compromised. Abort mission.");
         return;
         }
