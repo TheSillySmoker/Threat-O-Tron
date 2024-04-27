@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mark Schroeder\\OneDrive - Queensland University of Technology\\QUT\\CAB201 - programming\\Assignment 2\\Threat-o-tron\\Threat-o-tron.csproj": {}
+    "/Users/markschroeder/Documents/GitHub/Threat-O-Tron/Threat-o-tron.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mark Schroeder\\OneDrive - Queensland University of Technology\\QUT\\CAB201 - programming\\Assignment 2\\Threat-o-tron\\Threat-o-tron.csproj": {
+    "/Users/markschroeder/Documents/GitHub/Threat-O-Tron/Threat-o-tron.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mark Schroeder\\OneDrive - Queensland University of Technology\\QUT\\CAB201 - programming\\Assignment 2\\Threat-o-tron\\Threat-o-tron.csproj",
+        "projectUniqueName": "/Users/markschroeder/Documents/GitHub/Threat-O-Tron/Threat-o-tron.csproj",
         "projectName": "Threat-o-tron",
-        "projectPath": "C:\\Users\\Mark Schroeder\\OneDrive - Queensland University of Technology\\QUT\\CAB201 - programming\\Assignment 2\\Threat-o-tron\\Threat-o-tron.csproj",
-        "packagesPath": "C:\\Users\\Mark Schroeder\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mark Schroeder\\OneDrive - Queensland University of Technology\\QUT\\CAB201 - programming\\Assignment 2\\Threat-o-tron\\obj\\",
+        "projectPath": "/Users/markschroeder/Documents/GitHub/Threat-O-Tron/Threat-o-tron.csproj",
+        "packagesPath": "/Users/markschroeder/.nuget/packages/",
+        "outputPath": "/Users/markschroeder/Documents/GitHub/Threat-O-Tron/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Mark Schroeder\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/markschroeder/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -60,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
