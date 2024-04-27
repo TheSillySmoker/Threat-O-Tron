@@ -54,7 +54,7 @@ static class Program
                     game.MakeMap(inputMessageArguments);
                 break;
                 case "PATH":
-                //add path
+                //add path when built
                 Console.WriteLine("This has not been built yet. \nComing soon...");
                 break;
                 case "EXIT":
