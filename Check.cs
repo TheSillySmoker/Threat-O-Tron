@@ -59,6 +59,7 @@ class Check : Map{
         }
         return false;    
     }
+    
     /// <summary>
     /// Prints out all the safe directions the agent can go.
     /// </summary>
