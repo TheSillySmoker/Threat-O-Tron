@@ -21,15 +21,8 @@ static class Program
     public static string ReadString(string inputMessage = "")
     {
         Console.WriteLine(inputMessage);
-        string? output = Console.ReadLine();
-        if (output != null)
-        {
-            return output;
-        }
-        else
-        {
-            return "EMPTY INPUT";
-        }
+        string output = Console.ReadLine() ?? " ";
+        return output;
     }
 
     /// <summary>
