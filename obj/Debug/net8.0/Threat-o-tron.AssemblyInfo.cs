@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Threat-o-tron")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7dde27b23f6252992a25305d7e723f91329581b4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2564a15290b2c3b99bd933545aa5c99dbf39bd89")]
 [assembly: System.Reflection.AssemblyProductAttribute("Threat-o-tron")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Threat-o-tron")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

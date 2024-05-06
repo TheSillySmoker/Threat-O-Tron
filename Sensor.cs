@@ -3,31 +3,50 @@ namespace Threat_o_tron;
 class Sensor : IObstacle
 {
     /// <summary>
-    /// SensorGameX and SensorGameY is the location of the Centre of the Sensor
-    /// /// </summary>
-    private int SensorGameX{get; set;}
-    private int SensorGameY{get; set;}
-    private float Radius{get; set;}
+    /// GameX and GameY is the location of the Centre of the Sensor
+    /// </summary>
+    private readonly int GameX;
+    private readonly int GameY;
+    private readonly float Radius;
 
-
+    /// <summary>
+    /// Instatiates a new Sensor
+    /// </summary>
+    /// <param name="x">The X Coordinate of the centre of the sensor.</param>
+    /// <param name="y">The Y Coordinate of the centre of the sensor.</param>
+    /// <param name="radius">The radius of the sensor.</param>
     public Sensor(int x, int y, float radius){
-        SensorGameX = x;
-        SensorGameY = y;
+        GameX = x;
+        GameY = y;
         Radius = radius;
     }
+
+    /// <summary>
+    /// Plots a 'S' where the Sensor exists on the provided map.
+    /// </summary>
+    /// <param name="map">The map that will be drawn on.</param>
+    /// <returns></returns>
     public void DrawOnMap(Map map)
     {
-        map.FindPointOnMap(SensorGameX, SensorGameY, out int xStart, out int yStart);
+        map.FindPointOnMap(GameX, GameY, out int mapX, out int mapY);
 
         int roundedRadius = RoundFloatToInt(Radius);
-
-        for (int y = yStart - roundedRadius; y < yStart + Radius; y++) {
-            for (int x = xStart - roundedRadius; x < xStart + Radius; x++) {
-                if (Math.Pow(x - xStart, 2) + Math.Pow(y - yStart, 2) > Math.Pow(roundedRadius - 0.5, 2)) continue;
+        //start at the top of the circle and end at the bottom
+        for (int y = mapY - roundedRadius; y < mapY + roundedRadius; y++) 
+        {
+            ///For each y (row), go through each column, starting at left
+            for (int x = mapX - roundedRadius; x < mapX + Radius; x++)
+            {
+                //Check to see if the current point is in the circle, plot it if it is. 
+                if (Math.Pow(x - mapX, 2) + Math.Pow(y - mapY, 2) < Math.Pow(roundedRadius - 0.5, 2))
+                {
                     map.CheckAndPlot(x, y, 'S');
-                }   
+                }
+                    
+            }   
         }
     }
+    
     /// <summary>
     /// Takes a float value and rounds it up if it is above .5.
     /// </summary>

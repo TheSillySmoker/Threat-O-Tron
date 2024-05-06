@@ -28,8 +28,7 @@ class Fence : IObstacle{
     /// <summary>
     /// Takes an existing map's canvas and plots this obstacle onto it.
     /// </summary>
-    /// <param name="map">The map that holds the canvas that will be used to draw on.</param>
-    /// <returns>A new char array which can be used for a canvas. It contains this obstacle.</returns>
+    /// <param name="map">The map that will be drawn on.</param>
     public void DrawOnMap(Map map)
     {
         //Establish startpoint for ploting the symbol on the map

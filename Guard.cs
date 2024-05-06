@@ -23,9 +23,9 @@ class Guard : IObstacle
     }
 
     /// <summary>
-    /// Plots a 'G' where the guard coordinates are on the provided map
+    /// Plots a 'G' where the guard coordinates are on the provided map.
     /// </summary>
-    /// <param name="map">The map where the canvas comes from</param>
+    /// <param name="map">The map that will be drawn on.</param>
     /// <returns></returns>
     public void DrawOnMap(Map map){
         //where to plot the symbol on the map
