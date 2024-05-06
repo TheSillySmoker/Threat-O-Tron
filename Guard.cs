@@ -4,12 +4,13 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace Threat_o_tron;
 
-class Guard : IObstacle{
+class Guard : IObstacle
+{
     /// <summary>
-    /// GuardGameX and GuardGameY is the guard's location in the game
+    /// GameX and GameY is the guard's location in the game
     /// </summary>
-    private int GuardGameX{get; set;}
-    private int GuardGameY{get; set;}
+    private readonly int GameX;
+    private readonly int GameY;
 
     /// <summary>
     /// Instantiates a new Guard.
@@ -17,8 +18,8 @@ class Guard : IObstacle{
     /// <param name="x">The X Coordinate of the Guard in the game.</param>
     /// <param name="y">The Y Coordinate of the Guard in the game.</param>
     public Guard(int x, int y){
-        GuardGameX = x;
-        GuardGameY = y;
+        GameX = x;
+        GameY = y;
     }
 
     /// <summary>
@@ -26,11 +27,11 @@ class Guard : IObstacle{
     /// </summary>
     /// <param name="map">The map where the canvas comes from</param>
     /// <returns></returns>
-    public void drawOnMap(Map map){
+    public void DrawOnMap(Map map){
         //where to plot the symbol on the map
-        map.FindPointOnMap(GuardGameX,GuardGameY, out int guardMapX, out int guardMapY);
+        map.FindPointOnMap(GameX, GameY, out int MapX, out int MapY);
         //check to see if the guard will be on the proposed map and plot it if it is.
-        map.CheckAndPlot(guardMapX, guardMapY, 'G');
+        map.CheckAndPlot(MapX, MapY, 'G');
 
     }
 }

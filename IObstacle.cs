@@ -1,9 +1,10 @@
 namespace Threat_o_tron;
 
-interface IObstacle{
+interface IObstacle
+{
     /// <summary>
-    /// Takes an existing map's canvas and plots obstacles onto it.
+    /// Discovers the mapX and mapY coordinates, checks if the the obstacle will be on the map, and plots it on the given map.
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
-    public void drawOnMap(Map map);
+    public void DrawOnMap(Map map);
 }

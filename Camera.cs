@@ -30,7 +30,7 @@ class Camera : IObstacle
     /// Draws a triangle on the provided map in the given direction(orientaton).
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
-    public void drawOnMap(Map map)
+    public void DrawOnMap(Map map)
     {
         //Establish startpoint for ploting the symbol on the map; this will be the map's canvas corrdinates, not the games.
         map.FindPointOnMap(CameraGameX, CameraGameY, out int xStartOnMap, out int yStartOnMap);

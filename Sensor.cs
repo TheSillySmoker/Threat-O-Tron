@@ -15,7 +15,7 @@ class Sensor : IObstacle
         SensorGameY = y;
         Radius = radius;
     }
-    public void drawOnMap(Map map)
+    public void DrawOnMap(Map map)
     {
         map.FindPointOnMap(SensorGameX, SensorGameY, out int xStart, out int yStart);
 

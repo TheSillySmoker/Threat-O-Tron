@@ -14,11 +14,11 @@ static class Program
     }
 
     /// <summary>
-    /// A way to write a string and read from CLI with one method
+    /// Writes a string/prompt to the CLI, then reads a string afterward.
     /// </summary>
-    /// <param name="inputMessage">What do you want the user to read before they input text</param>
-    /// <returns>User input string or a defualt "EMPTY INPUT" if the user does not enter anything.</returns>
-    public static string ReadString(string inputMessage = "")
+    /// <param name="inputMessage">The promt that will be shown to the user</param>
+    /// <returns>User input string or a default "EMPTY INPUT" if the user does not enter anything.</returns>
+    public static string Prompt(string inputMessage = "")
     {
         Console.WriteLine(inputMessage);
         string output = Console.ReadLine() ?? " ";
@@ -31,13 +31,12 @@ static class Program
     public static void StartGame()
     {
         bool exiting = false;
-        Game game = new Game();
+        Game game = new();
         Console.WriteLine("Welcome to the Threat-o-tron 9000 Obstacle Avoidance System.\n");
-        printValidCommands();
-        //get a valid input
+        PrintValidCommands();
         do
         {
-            string inputMessage = ReadString("Enter Command:");
+            string inputMessage = Prompt("Enter Command:");
             //Make all inputs from the user not case sensitive
             string[] inputMessageArguments = inputMessage.ToUpper().Split(' ');
             //Filter the first argument/command given by the user
@@ -47,25 +46,26 @@ static class Program
                     game.Add(inputMessageArguments); 
                     break;
                 case "CHECK":
-                game.Check(inputMessageArguments);
-                break;
+                    game.Check(inputMessageArguments);
+                    break;
                 case "MAP":
                     game.MakeMap(inputMessageArguments);
-                break;
+                    break;
                 case "PATH":
-                //add path when built
-                Console.WriteLine("This has not been built yet. \nComing soon...");
-                break;
+                //TODO: add path when built
+                    Console.WriteLine("This has not been built yet. \nComing soon...");
+                    break;
                 case "EXIT":
                     Console.WriteLine("Thank you for using the Threat-o-tron 9000.");
                     exiting = true;
                     break;
                 case "HELP":
-                    printValidCommands();
-                break;
+                    PrintValidCommands();
+                    break;
                 default:
+                    //Instead of getting the uppercase version of the input, this line will get the exact input to give back to the user. 
                     Console.WriteLine($"Invalid option: {inputMessage.Split(' ')[0]}\nType 'help' to see a list of commands.");
-                break;
+                    break;
             }
         }
         //repeat if the user does not wish to exit
@@ -75,8 +75,15 @@ static class Program
     /// <summary>
     /// Writes the valid commands a user can input in the command line interface.
     /// </summary>
-    public static void printValidCommands()
+    public static void PrintValidCommands()
     {
-        Console.WriteLine("Valid commands are:\nadd guard <x> <y>: registers a guard obstacle\nadd fence <x> <y> <orientation> <length>: registers a fence obstacle. Orientation must be 'east' or 'north'.\nadd sensor <x> <y> <radius>: registers a sensor obstacle\nadd camera <x> <y> <direction>: registers a camera obstacle. Direction must be 'north', 'south', 'east' or 'west'.\ncheck <x> <y>: checks whether a location and its surroundings are safe\nmap <x> <y> <width> <height>: draws a text-based map of registered obstacles\npath <agent x> <agent y> <objective x> <objective y>: finds a path free of obstacles\nhelp: displays this help message\nexit: closes this program\n");
+        Console.WriteLine("Valid commands are:\nadd guard <x> <y>: registers a guard obstacle");
+        Console.WriteLine("add fence <x> <y> <orientation> <length>: registers a fence obstacle. Orientation must be 'east' or 'north'.");
+        Console.WriteLine("add sensor <x> <y> <radius>: registers a sensor obstacle");
+        Console.WriteLine("add camera <x> <y> <direction>: registers a camera obstacle. Direction must be 'north', 'south', 'east' or 'west'.");
+        Console.WriteLine("check <x> <y>: checks whether a location and its surroundings are safe");
+        Console.WriteLine("map <x> <y> <width> <height>: draws a text-based map of registered obstacles");
+        Console.WriteLine("path <agent x> <agent y> <objective x> <objective y>: finds a path free of obstacles");
+        Console.WriteLine("help: displays this help message\nexit: closes this program\n");
     }
 }

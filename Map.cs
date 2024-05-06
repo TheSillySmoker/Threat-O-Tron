@@ -33,7 +33,7 @@ class Map{
 
         foreach (IObstacle obstacle in obstacles)
         {
-            obstacle.drawOnMap(this);
+            obstacle.DrawOnMap(this);
         }
     }
 
