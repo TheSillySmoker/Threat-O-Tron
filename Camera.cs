@@ -6,23 +6,22 @@ namespace Threat_o_tron;
 class Camera : IObstacle
 {
     /// <summary>
-    /// CameraGameX and CameraGameY is the Cameras starting location in the game
+    /// GameX and GameY is the Cameras starting location in the game
     /// </summary>
-    private int CameraGameX{get; set;}
-    private int CameraGameY{get; set;}    
-    private string Orientation{get; set;}
-    private int XStartOnMap{get;set;}
-    private int YStartOnMap{get;set;}
+    private readonly int GameX;
+    private readonly int GameY;    
+    private readonly string Orientation;
+
     /// <summary>
     /// Instantiates a new Camera.
     /// </summary>
     /// <param name="x">The X Coordinate of the camera in the game.</param>
     /// <param name="y">The Y Coordinate of the camera in the game.</param>
-    /// <param name="orientation"></param>
+    /// <param name="orientation">Which way the camera spans.</param>
     public Camera(int x, int y, string orientation)
     {
-        CameraGameX = x;
-        CameraGameY = y;
+        GameX = x;
+        GameY = y;
         Orientation = orientation;        
     }   
 
@@ -32,120 +31,100 @@ class Camera : IObstacle
     /// <param name="map">The map that will be drawn on.</param>
     public void DrawOnMap(Map map)
     {
-        //Establish startpoint for ploting the symbol on the map; this will be the map's canvas corrdinates, not the games.
-        map.FindPointOnMap(CameraGameX, CameraGameY, out int xStartOnMap, out int yStartOnMap);
-        XStartOnMap = xStartOnMap;
-        YStartOnMap = yStartOnMap;
+        //Establish startpoint for ploting the symbol on the map; this will be the map's canvas coordinates, not the games.
+        map.FindPointOnMap(GameX, GameY, out int mapX, out int mapY);
         switch(Orientation){
             case "NORTH":
-                DrawNorthCamera(map);
-            break;
+                DrawNorthCamera(map, mapX, mapY);
+                break;
             case "EAST":
-                DrawEastCamera(map);
-            break;
+                DrawEastCamera(map, mapX, mapY);
+                break;
             case "SOUTH":
-                DrawSouthCamera(map);
-            break;
+                DrawSouthCamera(map, mapX, mapY);
+                break;
             case "WEST":
-                DrawWestCamera(map);
-            break;                        
+                DrawWestCamera(map, mapX, mapY);
+                break;                        
         }
     }
 
     /// <summary>
-    /// Draws a triange pointing North on the given map.
+    /// Draws a triangle pointing North on the given map.
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
-    private void DrawNorthCamera(Map map){
-        int x;
-        int y;             
-        //count how many spaces there are ABOVE the starting corrdinate and loop through them   
-        for(int i = 0; i < YStartOnMap+1; i++)
+    private static void DrawNorthCamera(Map map, int mapX, int mapY){         
+        //count how many spaces there are ABOVE the starting coordinate and loop through them   
+        for(int rows = 0; rows < mapY+1; rows++)
         {
             //in each layer above the start point, plot all the available spaces that are above this for both the right and left side.
-            for(int ii = 0; ii < YStartOnMap+1 - i; ii++)
+            for(int rowsAboveCurrentRow = 0; rowsAboveCurrentRow < mapY+1 - rows; rowsAboveCurrentRow++)
             {
-                    x = XStartOnMap+i;
-                    y = YStartOnMap-ii-i;
-                    map.CheckAndPlot(x, y, 'C');
-                    x = XStartOnMap-i;
-                    y = YStartOnMap-ii-i;
-                    map.CheckAndPlot(x, y, 'C');
+                //Right side
+                map.CheckAndPlot(mapX + rows, mapY - rowsAboveCurrentRow - rows, 'C');
+                //Left side
+                map.CheckAndPlot(mapX - rows, mapY - rowsAboveCurrentRow - rows, 'C');
             }
         }
     }
 
     /// <summary>
-    /// Draws a triange pointing East on the given map.
+    /// Draws a triangle pointing East on the given map.
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
-    private void DrawEastCamera(Map map)
-    {
-        int x;
-        int y;                   
-        //count how many spaces there are East of the starting corrdinate and loop through them   
-        for(int i = 0; i < map.SizeX - XStartOnMap; i++)
+    private static void DrawEastCamera(Map map, int mapX, int mapY)
+    {                  
+        //count how many spaces there are East of the starting coordinate and loop through them   
+        for(int columns = 0; columns < map.SizeX - mapX; columns++)
         {
-            //in each layer above the east of the starting point, plot all the available spaces that are east of this for both above and below.
-            for(int ii = 0; ii < map.SizeX - XStartOnMap + i+1; ii++)
+            //in each column east of the starting point, plot all the available spaces that are east of this both above and below.
+            for(int columnsRightOfColumn = 0; columnsRightOfColumn < map.SizeX - mapX + columns+1; columnsRightOfColumn++)
             {
-                y = YStartOnMap+i;
-                x = XStartOnMap+ii+i;
-                map.CheckAndPlot(x, y, 'C');
-                y = YStartOnMap-i;
-                x = XStartOnMap+ii+i;
-                map.CheckAndPlot(x, y, 'C');
+                //Above
+                map.CheckAndPlot(mapX + columnsRightOfColumn + columns, mapY - columns, 'C');
+                //Below      
+                map.CheckAndPlot(mapX + columnsRightOfColumn + columns, mapY + columns, 'C');
             }
         }
     }
 
     /// <summary>
-    /// Draws a triange pointing South on the given map.
+    /// Draws a triangle pointing South on the given map.
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
-    private void DrawSouthCamera(Map map)
-    {
-        int x;
-        int y;                   
-        //count how many spaces there are BELOW the starting corrdinate and loop through them   
-        for(int i = 0; i < map.SizeY - YStartOnMap; i++)
+    private static void DrawSouthCamera(Map map, int mapX, int mapY)
+    {                 
+        //count how many spaces there are BELOW the starting coordinate and loop through them   
+        for(int rows = 0; rows < map.SizeY - mapY; rows++)
         {
             //in each layer BELOW the start point, plot all the available spaces that are BELOW this for both the right and left side.
-            for(int ii = 0; ii < map.SizeY - YStartOnMap + i+1; ii++)
+            for(int rowsBelowRow = 0; rowsBelowRow < map.SizeY - mapY + rows+1; rowsBelowRow++)
             {
-                x = XStartOnMap+i;
-                y = YStartOnMap+ii+i;
-                map.CheckAndPlot(x, y, 'C');
-                x = XStartOnMap-i;
-                y = YStartOnMap+ii+i;
-                map.CheckAndPlot(x, y, 'C');
+                //Right side
+                map.CheckAndPlot(mapX + rows, mapY + rowsBelowRow + rows, 'C');
+                //Left side
+                map.CheckAndPlot(mapX - rows, mapY + rowsBelowRow + rows, 'C');
             }
         }
     }
 
     /// <summary>
-    /// Draws a triange pointing West on the given map.
+    /// Draws a triangle pointing West on the given map.
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
-    private void DrawWestCamera(Map map)
-    {
-        int x;
-        int y;              
-        //count how many spaces to the WEST there are from the starting corrdinate and loop through them   
-        for(int i = 0; i < XStartOnMap+1; i++)
+    private static void DrawWestCamera(Map map, int mapX, int mapY)
+    {      
+        //count how many spaces to the WEST there are from the starting coordinate and loop through them   
+        for(int columns = 0; columns < mapX+1; columns++)
         {
-            //in each layer WEST of the start point, plot all the available spaces that are west of this for both above and below.
-            for(int ii = 0; ii < XStartOnMap+1 - i; ii++)
+            //in each column WEST of the curent column, plot all the available spaces that are west of this for both above and below.
+            for(int columnsLeftOfColumn = 0; columnsLeftOfColumn < mapX+1 - columns; columnsLeftOfColumn++)
             {
-                    y = YStartOnMap+i;
-                    x = XStartOnMap-ii-i;
-                    map.CheckAndPlot(x, y, 'C');
-                    y = YStartOnMap-i;
-                    x = XStartOnMap-ii-i;
-                    map.CheckAndPlot(x, y, 'C');
+                    //Above
+                    map.CheckAndPlot(mapX - columnsLeftOfColumn - columns, mapY - columns, 'C');
+                    //Below
+                    map.CheckAndPlot(mapX - columnsLeftOfColumn - columns, mapY + columns, 'C');
             }
         }
     }
- 
-
 }
