@@ -180,7 +180,7 @@ class Game
         }
         
         //creates a new check which creates a new map; subtract 1 from x and y to make the the map's southwest point south west of the agent.
-        Check check = new Check(agentX-1, agentY-1, this);
+        Check check = new Check(agentX-1, agentY-1, obstacles);
         check.PrintSafeDirections();
         
     }

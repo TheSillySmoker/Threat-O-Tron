@@ -1,28 +1,29 @@
+using System.Diagnostics;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 
 namespace Threat_o_tron;
 
-class Check : Map{
-    private int AgentGameX{get;set;}
-    private int AgentGameY{get;set;}
-    private int AgentMapX{get;set;}
-    private int AgentMapY{get;set;}
+class Check : Map
+{
+    private readonly int AgentMapX;
+    private readonly int AgentMapY;
 
     /// <summary>
-    /// Constructs a check object that can be used for printing out which shows the surrounding directions not 
+    /// Constructs a check object that can be used for printing out which shows the surrounding unobstructed directions.
     /// </summary>
-    /// <param name="southWestX"></param>
-    /// <param name="southWestY"></param>
-    /// <param name="game"></param>
-    public Check(int southWestX, int southWestY, Game game) : base(southWestX, southWestY, 3, 3, game.obstacles)
+    /// <param name="southWestX">The X Coodinate for the southwest point of the map that will be instatiated.</param>
+    /// <param name="southWestY">The Y Coodinate for the southwest point of the map that will be instatiated.</param>
+    /// <param name="obstacles">Existing obstacles in the game.</param>
+    public Check(int southWestX, int southWestY, List<IObstacle> obstacles) : base(southWestX, southWestY, 3, 3, obstacles)
     {
-        AgentGameX = southWestX+1;
-        AgentGameY = southWestY+1;
-        FindPointOnMap(AgentGameX,AgentGameY, out int agentMapX, out int agentMapY);
+        //The agent's position will be in the middle of the map.
+        //In a check, the map is 3x3 in size so we need to adjust up and across by 1 to get the centre. 
+        FindPointOnMap(southWestX + 1, southWestY + 1, out int agentMapX, out int agentMapY);
         AgentMapX = agentMapX;
         AgentMapY = agentMapY;
     }
+
     /// <summary>
     /// Gets all the directions the agent can move to safely.
     /// </summary>
@@ -57,28 +58,28 @@ class Check : Map{
     /// <returns>True or false if the given coordinate is safe.</returns>
     private bool CheckIfSafe(int x, int y)
     {
-        if(!ContainsPoint(x,y))
-        {
-            throw new ArgumentException("Your x and y should be in the map you have created");
-        }
-        char character = Canvas[y,x];
-        if (character == '.')
+        Trace.Assert(!ContainsPoint(x,y), "Your x and y should be in the map you have created");
+        if (Canvas[y,x] == '.')
         {
             return true;
         }
-        return false;    
+        else
+        {
+            return false;   
+        } 
     }
     
     /// <summary>
-    /// Prints out all the safe directions the agent can go.
+    /// Prints all the safe directions the agent can go.
+    /// Checks if the agent is compromised.
     /// </summary>
     public void PrintSafeDirections()
     {
         //check the agents location
         if(!CheckIfSafe(AgentMapX,AgentMapY))
         {
-        Console.WriteLine("Agent, your location is compromised. Abort mission.");
-        return;
+            Console.WriteLine("Agent, your location is compromised. Abort mission.");
+            return;
         }
         //get agent's surroundings and print them if there are any.
         List<string> safeDirections = GetSafeDirections();
@@ -89,7 +90,8 @@ class Check : Map{
             {
                 Console.WriteLine(safeDirection);
             }
-        }else
+        }
+        else
         {
             Console.WriteLine("You cannot safely move in any direction. Abort mission.");
         }
