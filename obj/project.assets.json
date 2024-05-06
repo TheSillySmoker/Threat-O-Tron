@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Mark Schroeder\\Documents\\GitHub\\Threat-O-Tron\\Threat-o-tron.csproj",
+      "projectUniqueName": "C:\\Users\\Mark Schroeder\\OneDrive - Queensland University of Technology\\QUT\\CAB201 - programming\\Assignment 2\\git\\Threat-O-Tron\\Threat-o-tron.csproj",
       "projectName": "Threat-o-tron",
-      "projectPath": "C:\\Users\\Mark Schroeder\\Documents\\GitHub\\Threat-O-Tron\\Threat-o-tron.csproj",
+      "projectPath": "C:\\Users\\Mark Schroeder\\OneDrive - Queensland University of Technology\\QUT\\CAB201 - programming\\Assignment 2\\git\\Threat-O-Tron\\Threat-o-tron.csproj",
       "packagesPath": "C:\\Users\\Mark Schroeder\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Mark Schroeder\\Documents\\GitHub\\Threat-O-Tron\\obj\\",
+      "outputPath": "C:\\Users\\Mark Schroeder\\OneDrive - Queensland University of Technology\\QUT\\CAB201 - programming\\Assignment 2\\git\\Threat-O-Tron\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Mark Schroeder\\AppData\\Roaming\\NuGet\\NuGet.Config",
