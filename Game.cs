@@ -5,7 +5,7 @@ namespace Threat_o_tron;
 
 class Game
 {
-    public readonly List<IObstacle> obstacles = new List<IObstacle>();
+    private readonly List<IObstacle> obstacles = new List<IObstacle>();
 
     /// <summary>
     /// Instantiates a new blank game.
@@ -13,7 +13,8 @@ class Game
     public Game(){}
 
     /// <summary>
-    /// Used when the user uses the add command. This will take the arguments to see what it needs to add.
+    /// Used when the user uses the add command. 
+    /// Takes the arguments to see what it needs to add.
     /// </summary>
     /// <param name="arguments">The arguments that will be anlaysed and parsed to the specific obstacle that needs to be added.</param>
     public void Add(string[] arguments)
