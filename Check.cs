@@ -19,7 +19,7 @@ class Check : Map
     {
         //The agent's position will be in the middle of the map.
         //In a check, the map is 3x3 in size so we need to adjust up and across by 1 to get the centre. 
-        FindPointOnMap(southWestX + 1, southWestY + 1, out int agentMapX, out int agentMapY);
+        GetMapCoordinates(southWestX + 1, southWestY + 1, out int agentMapX, out int agentMapY);
         AgentMapX = agentMapX;
         AgentMapY = agentMapY;
     }

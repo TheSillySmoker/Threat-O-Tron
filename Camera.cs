@@ -32,7 +32,7 @@ class Camera : IObstacle
     public void DrawOnMap(Map map)
     {
         //Establish startpoint for ploting the symbol on the map; this will be the map's canvas coordinates, not the games.
-        map.FindPointOnMap(GameX, GameY, out int mapX, out int mapY);
+        map.GetMapCoordinates(GameX, GameY, out int mapX, out int mapY);
         switch(Orientation){
             case "NORTH":
                 DrawNorthCamera(map, mapX, mapY);
@@ -75,10 +75,10 @@ class Camera : IObstacle
     private static void DrawEastCamera(Map map, int mapX, int mapY)
     {                  
         //count how many spaces there are East of the starting coordinate and loop through them   
-        for(int columns = 0; columns < map.SizeX - mapX; columns++)
+        for(int columns = 0; columns < map.Width - mapX; columns++)
         {
             //in each column east of the starting point, plot all the available spaces that are east of this both above and below.
-            for(int columnsRightOfColumn = 0; columnsRightOfColumn < map.SizeX - mapX + columns+1; columnsRightOfColumn++)
+            for(int columnsRightOfColumn = 0; columnsRightOfColumn < map.Width - mapX + columns+1; columnsRightOfColumn++)
             {
                 //Above
                 map.CheckAndPlot(mapX + columnsRightOfColumn + columns, mapY - columns, 'C');
@@ -95,10 +95,10 @@ class Camera : IObstacle
     private static void DrawSouthCamera(Map map, int mapX, int mapY)
     {                 
         //count how many spaces there are BELOW the starting coordinate and loop through them   
-        for(int rows = 0; rows < map.SizeY - mapY; rows++)
+        for(int rows = 0; rows < map.Height - mapY; rows++)
         {
             //in each layer BELOW the start point, plot all the available spaces that are BELOW this for both the right and left side.
-            for(int rowsBelowRow = 0; rowsBelowRow < map.SizeY - mapY + rows+1; rowsBelowRow++)
+            for(int rowsBelowRow = 0; rowsBelowRow < map.Height - mapY + rows+1; rowsBelowRow++)
             {
                 //Right side
                 map.CheckAndPlot(mapX + rows, mapY + rowsBelowRow + rows, 'C');

@@ -32,7 +32,7 @@ class Fence : IObstacle{
     public void DrawOnMap(Map map)
     {
         //Establish startpoint for ploting the symbol on the map
-        map.FindPointOnMap(StartGameX, StartGameY, out int startOnMapX, out int startOnMapY);
+        map.GetMapCoordinates(StartGameX, StartGameY, out int startOnMapX, out int startOnMapY);
         if (Orientation == "EAST")
         {
             for(int x = 0; x < Length; x++)

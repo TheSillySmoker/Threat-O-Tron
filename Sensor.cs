@@ -28,7 +28,7 @@ class Sensor : IObstacle
     /// <returns></returns>
     public void DrawOnMap(Map map)
     {
-        map.FindPointOnMap(GameX, GameY, out int mapX, out int mapY);
+        map.GetMapCoordinates(GameX, GameY, out int mapX, out int mapY);
         //Always round up as a sliver of sensor will block out the wone square in the game. 
         int roundedRadius = (int)Math.Ceiling(Radius);
         //start at the top of the circle and end at the bottom

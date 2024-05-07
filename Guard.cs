@@ -29,7 +29,7 @@ class Guard : IObstacle
     /// <returns></returns>
     public void DrawOnMap(Map map){
         //where to plot the symbol on the map
-        map.FindPointOnMap(GameX, GameY, out int MapX, out int MapY);
+        map.GetMapCoordinates(GameX, GameY, out int MapX, out int MapY);
         //check to see if the guard will be on the proposed map and plot it if it is.
         map.CheckAndPlot(MapX, MapY, 'G');
 

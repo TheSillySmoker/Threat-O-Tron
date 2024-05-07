@@ -4,51 +4,43 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Threat_o_tron;
 
-class Map{
+class Map
+{
 
     public char[,] Canvas;
-    private int SouthWestX{get; set;}          
-    private int SouthWestY{get; set;} 
-    public int SizeX{get;private set;}          
-    public int SizeY{get;private set;}
-    
-
+    private readonly int SouthWestX;
+    private readonly int SouthWestY;
+    public int Width{get;}          
+    public int Height{get;}
 
     /// <summary>
     /// Instantiates a new map based on the size given by the user. Any obstacles in the given obstacles list will be drawn on the map.
     /// </summary>
     /// <param name="southWestX">The game's X coordinate for the most SouthWest point of the map.</param>
     /// <param name="southWestY">The game's Y coordinate for the most SouthWest point of the map.</param>
-    /// <param name="sizeX">The width of the map.</param>
-    /// <param name="sizeY">The height of the map.</param>
-    public Map(int southWestX, int southWestY, int sizeX, int sizeY, List<IObstacle> obstacles)
+    /// <param name="width">The width of the map.</param>
+    /// <param name="height">The height of the map.</param>
+    public Map(int southWestX, int southWestY, int width, int height, List<IObstacle> obstacles)
     {
         SouthWestX = southWestX;
         SouthWestY = southWestY;
-        SizeX = sizeX;
-        SizeY = sizeY;
-        Canvas = new char[SizeY,SizeX];
+        Width = width;
+        Height = height;
+        Canvas = new char[Height,Width];
 
-        PopulateCanvas('.');
+        //Populate all spots in the canvas with '.'
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                Canvas[y, x] = '.';
+            }
+        }
 
+        //Draw each obstacle that exists in the game on this map
         foreach (IObstacle obstacle in obstacles)
         {
             obstacle.DrawOnMap(this);
-        }
-    }
-
-    /// <summary>
-    /// Populates the Canvas array property with a specified character.
-    /// </summary>
-    /// <param name="character">The character that will fill the blank Canvas.</param>
-    private void PopulateCanvas(char character)
-    {
-        for (int i = 0; i < SizeY; i++)
-        {
-            for (int ii = 0; ii < SizeX; ii++)
-            {
-                Canvas[i, ii] = character;
-            }
         }
     }
 
@@ -57,28 +49,32 @@ class Map{
     /// </summary>
     public void PrintMap()
     {
-        for (int i = 0; i < SizeY; i++)
+        for (int y = 0; y < Height; y++)
         {
-            for (int j = 0; j < SizeX; j++)
+            for (int x = 0; x < Width; x++)
             {
-                Console.Write(Canvas[i, j]);
+                Console.Write(Canvas[y, x]);
             }
             Console.WriteLine();
         }
     }
+
     /// <summary>
     /// Checks to see if the given point exists on this map.
     /// </summary>
     /// <param name="xOrigin">X corrdinate of Obstacle in the game.</param>
     /// <param name="yOrigin">Y coordinate of Obstacle in the game.</param>
     /// <returns>True or false whether the map contains the given point.</returns>
-    public bool ContainsPoint(int xOrigin, int yOrigin)
+    protected bool ContainsPoint(int xOrigin, int yOrigin)
     {
-        if(xOrigin <= SizeX-1 && xOrigin >= 0 && yOrigin <= SizeY-1 && yOrigin >= 0)
+        if(xOrigin <= Width-1 && xOrigin >= 0 && yOrigin <= Height-1 && yOrigin >= 0)
         {
             return true;
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
 
     /// <summary>
@@ -88,21 +84,24 @@ class Map{
     /// <param name="yOrigin">Y coordinate of Obstacle in the game.</param>
     /// <param name="mapX">The start X coordinate of the obstacle on the map.</param>
     /// <param name="mapY">The start Y coordinate of the obstacle on the map.</param>
-    public void FindPointOnMap(int xOriginOfObstacle, int yOriginOfObstacle, out int mapX, out int mapY)
+    public void GetMapCoordinates(int xOriginOfObstacle, int yOriginOfObstacle, out int mapX, out int mapY)
     {
-        mapY = SizeY-1 - (yOriginOfObstacle - SouthWestY);
-        mapX = xOriginOfObstacle - SouthWestX ;
+        mapY = Height-1 - (yOriginOfObstacle - SouthWestY);
+        mapX = xOriginOfObstacle - SouthWestX;
     }
 
     /// <summary>
-    /// Checks to see if the point given will be on the map and plots it if it is. This takes canvas Coordinates, not game coordinates.
+    /// Checks to see if the point given will be on the map and plot it if it is. This takes canvas Coordinates, not game coordinates.
     /// </summary>
-    /// <param name="x">X coordinate on the map's canvas that will be plotted.</param>
-    /// <param name="y">Y coordinate on the map's canvas that will be plotted.</param>
+    /// <param name="mapX">X coordinate on the map's canvas that will be plotted.</param>
+    /// <param name="mapY">Y coordinate on the map's canvas that will be plotted.</param>
     /// <param name="character">The character that will be plotted on the map.</param>
-    public void CheckAndPlot(int x, int y, char character)
+    public void CheckAndPlot(int mapX, int mapY, char character)
     {
-    if (ContainsPoint(x,y)) Canvas[y,x] = character;
+        if (ContainsPoint(mapX, mapY))
+        {
+            Canvas[mapY,mapX] = character;  
+        } 
     }
 }
 
