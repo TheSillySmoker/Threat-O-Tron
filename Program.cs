@@ -52,8 +52,7 @@ static class Program
                     game.MakeMap(inputMessageArguments);
                     break;
                 case "PATH":
-                //TODO: add path when built
-                    Console.WriteLine("This has not been built yet. \nComing soon...");
+                    game.Path(inputMessageArguments);
                     break;
                 case "HELP":
                     PrintValidCommands();

@@ -216,8 +216,36 @@ class Game
         }    
     }
 
+    public void Path(string[] arguments)
+    {
+        try
+        {
+            if (arguments.Length != 5)
+            {
+                throw new ArgumentException("Incorrect number of arguments.");
+            }
+
+            if (!int.TryParse(arguments[1], out int agentX) || !int.TryParse(arguments[2], out int agentY))
+            {
+                throw new ArgumentException("Agent coordinates are not valid integers.");
+            }
+
+            if (!int.TryParse(arguments[3], out int objectiveX) || !int.TryParse(arguments[4], out int objectiveY))
+            {
+                throw new ArgumentException("Width and height must be valid positive integers.");
+            }        
+            Path path = new Path(agentX, agentY, objectiveX, objectiveY, obstacles);
+
+
+        }
+        catch(ArgumentException exception)
+        {
+            Console.WriteLine(exception.Message);
+        }
+    }
+
     /// <summary>
-    /// Creates a map with the given arguments.
+    /// Creates a map and prints it with the given arguments.
     /// </summary>
     /// <param name="arguments">This will be used to instantiate the map, given it is valid.</param>
     public void MakeMap(string[] arguments)
