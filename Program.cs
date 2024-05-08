@@ -55,12 +55,12 @@ static class Program
                 //TODO: add path when built
                     Console.WriteLine("This has not been built yet. \nComing soon...");
                     break;
+                case "HELP":
+                    PrintValidCommands();
+                    break;
                 case "EXIT":
                     Console.WriteLine("Thank you for using the Threat-o-tron 9000.");
                     exiting = true;
-                    break;
-                case "HELP":
-                    PrintValidCommands();
                     break;
                 default:
                     //Instead of getting the uppercase version of the input, this line will get the exact input to give back to the user. 
