@@ -3,14 +3,6 @@ using System.Reflection.PortableExecutable;
 
 namespace Threat_o_tron;
 
-public class InvalidNumberOfArgumentsException : Exception
-{
-    public InvalidNumberOfArgumentsException(string Message) : base (Message)
-    {
-
-    }
-}
-
 class Game
 {
     private readonly List<IObstacle> obstacles = new List<IObstacle>();
@@ -80,7 +72,7 @@ class Game
             {
                 throw new ArgumentException("Coordinates are not valid integers.");
             }
-            
+
             obstacles.Add(new Guard(x, y));
             Console.WriteLine("Successfully added guard obstacle.");
         }
