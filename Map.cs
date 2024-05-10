@@ -78,16 +78,16 @@ class Map
     }
 
     /// <summary>
-    /// Finds where the obstacle's starting coordinates for the map, not the game's coordinates!.
+    /// Finds where the object's starting coordinates for the map, not the game's coordinates!.
     /// </summary>
-    /// <param name="xOrigin">X corrdinate of Obstacle in the game.</param>
-    /// <param name="yOrigin">Y coordinate of Obstacle in the game.</param>
-    /// <param name="mapX">The start X coordinate of the obstacle on the map.</param>
-    /// <param name="mapY">The start Y coordinate of the obstacle on the map.</param>
-    public void GetMapCoordinates(int xOriginOfObstacle, int yOriginOfObstacle, out int mapX, out int mapY)
+    /// <param name="gameX">X corrdinate of the object in the game.</param>
+    /// <param name="gameY">Y coordinate of the object in the game.</param>
+    /// <param name="mapX">The start X coordinate of the object on the map.</param>
+    /// <param name="mapY">The start Y coordinate of the object on the map.</param>
+    public void GetMapCoordinates(int gameX, int gameY, out int mapX, out int mapY)
     {
-        mapY = Height-1 - (yOriginOfObstacle - SouthWestY);
-        mapX = xOriginOfObstacle - SouthWestX;
+        mapY = Height-1 - (gameY - SouthWestY);
+        mapX = gameX - SouthWestX;
     }
 
     /// <summary>

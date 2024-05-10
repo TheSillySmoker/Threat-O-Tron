@@ -233,10 +233,33 @@ class Game
             if (!int.TryParse(arguments[3], out int objectiveX) || !int.TryParse(arguments[4], out int objectiveY))
             {
                 throw new ArgumentException("Width and height must be valid positive integers.");
-            }        
-            Path path = new Path(agentX, agentY, objectiveX, objectiveY, obstacles);
-
-
+            }
+            if(agentX == objectiveX && agentY == objectiveY)
+            {
+                Console.WriteLine("Agent, you are already at the objective.");
+            }  
+            else
+            {
+                Path path = new Path(agentX, agentY, objectiveX, objectiveY, obstacles);
+                if(path.ObjectiveIsBlocked())
+                {
+                    Console.WriteLine("The objective is blocked by an obstacle and cannot be reached.");
+                }
+                // else if(path.Directions.Count == 0)
+                // {
+                //     Console.WriteLine("There is no safe path to the objective.");
+                // }
+                else
+                {
+                    path.AttemptMission();
+                    path.PrintMap();
+                    foreach(string direction in path.Directions)
+                    {
+                        Console.WriteLine(direction);
+                    }
+                }
+                
+            }      
         }
         catch(ArgumentException exception)
         {

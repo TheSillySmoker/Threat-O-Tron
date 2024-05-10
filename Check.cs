@@ -58,15 +58,15 @@ class Check : Map
     /// <returns>True or false if the given coordinate is safe.</returns>
     private bool CheckIfSafe(int x, int y)
     {
-        Trace.Assert(!ContainsPoint(x,y), "Your x and y should be in the map you have created");
+        Debug.Assert(ContainsPoint(x,y), "Your x and y should be in the map you have created");
         if (Canvas[y,x] == '.')
         {
             return true;
         }
         else
         {
-            return false;   
-        } 
+            return false;  
+        }
     }
     
     /// <summary>
