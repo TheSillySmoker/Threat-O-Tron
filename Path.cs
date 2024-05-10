@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Dynamic;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
@@ -81,16 +82,57 @@ class Path : Map{
     {
         CheckAndPlot(AgentMapX, AgentMapY, 'A');
         CheckAndPlot(ObjectiveMapX, ObjectiveMapY, 'O');
-        MoveOnXAxis();  
-        MoveOnYAxis();      
+        MoveOnYAxis();  
+        MoveOnXAxis();      
     }
 
-    private void ObstacleInTheWay(int currentX, int currentY){
+    private void ObstacleInTheWay(int currentX, int currentY, List<string> options){
         //TODO: delete line below
         Check check = new Check(currentX, currentY, Obstacles);
-        if(check.GetSafeDirections().Contains("North"))
+        if(check.GetSafeDirections().Contains(options[0]))
         {
-            // do something
+            Console.WriteLine(options[0]);
+            switch (options[0])
+            {
+                case "North":
+                    Directions.Add($"Head north for 1 klicks.");
+                    AgentMapY--;
+                    AgentMapX--;
+                    MoveOnXAxis();
+                    break;
+                case "East":
+                    MoveOnXAxis();
+                    break;
+                case "South":
+                    MoveOnYAxis();
+                    break;
+                case "West":
+                    MoveOnXAxis();
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if(check.GetSafeDirections().Contains(options[1]))
+        {
+            Console.WriteLine(options[1]);
+            switch (options[1])
+            {
+                case "North":
+                    MoveOnYAxis();
+                    break;
+                case "East":
+                    MoveOnXAxis();
+                    break;
+                case "South":
+                    MoveOnYAxis();
+                    break;
+                case "West":
+                    MoveOnXAxis();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -109,6 +151,7 @@ class Path : Map{
             HeadNorth(yKlicksFromAgent);
         }
     } 
+
     private void MoveOnXAxis()
     {
         int xKlicksFromAgent;
@@ -146,7 +189,7 @@ class Path : Map{
                 {
                     AgentMapY -= y;
                     Directions.Add($"Head north for {counter-1} klicks");
-                    ObstacleInTheWay(AgentMapX, AgentMapY);
+                    ObstacleInTheWay(AgentMapX, AgentMapY, ["East","West"]);
                     return;
                 }                    
             }
@@ -158,6 +201,7 @@ class Path : Map{
         }
         AgentMapY -= counter;
         Directions.Add($"Head north for {counter} klicks.");
+        MoveOnXAxis();
     }
 
     private void HeadEast(int klicks)
@@ -182,7 +226,7 @@ class Path : Map{
                 {
                     AgentMapX += x;
                     Directions.Add($"Head east for {counter-1} klicks");
-                    ObstacleInTheWay(AgentMapX, AgentMapY);
+                    ObstacleInTheWay(AgentMapX, AgentMapY, ["North","South"]);
                     return;
                 }                    
             }
@@ -194,6 +238,7 @@ class Path : Map{
         }
         AgentMapX += counter;
         Directions.Add($"Head east for {counter} klicks.");
+        MoveOnYAxis();
     }
 
     private void HeadSouth(int klicks)
@@ -210,15 +255,15 @@ class Path : Map{
             {
                 if (nextX == 'O')
                 {
-                    Directions.Add($"Head north for {counter} klicks.");
+                    Directions.Add($"Head south for {counter} klicks.");
                     //TODO: objective complete
                     return;
                 }
                 else
                 {
                     AgentMapY += y;
-                    Directions.Add($"Head north for {counter-1} klicks");
-                    ObstacleInTheWay(AgentMapX, AgentMapY);
+                    Directions.Add($"Head south for {counter-1} klicks");
+                    ObstacleInTheWay(AgentMapX, AgentMapY,  ["East","West"]);
                     return;
                 }                    
             }
@@ -229,7 +274,8 @@ class Path : Map{
             }
         }
         AgentMapY += counter;
-        Directions.Add($"Head north for {counter} klicks.");
+        Directions.Add($"Head south for {counter} klicks.");
+        MoveOnXAxis();
     }
 
     private void HeadWest(int klicks)
@@ -253,7 +299,7 @@ class Path : Map{
                 {
                     AgentMapX -= x;
                     Directions.Add($"Head west for {counter-1} klicks");
-                    ObstacleInTheWay(AgentMapX, AgentMapY);
+                    ObstacleInTheWay(AgentMapX, AgentMapY,  ["North","South"]);
                     return;
                 }                    
             }
@@ -265,5 +311,6 @@ class Path : Map{
         }
         AgentMapX -= counter;
         Directions.Add($"Head west for {counter} klicks.");
+        MoveOnYAxis();
     }
 }
