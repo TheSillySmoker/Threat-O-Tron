@@ -120,7 +120,6 @@ class Path : Map
 
     private void ObstacleInTheWay(List<string> options)
     {   
-        Console.WriteLine("here");
         Check check = new Check(AgentMapX, AgentMapY, Obstacles);
         List<string> safeDirections = check.GetSafeDirections();
         if(safeDirections.Contains(options[0]) || safeDirections.Contains(options[1]))
@@ -137,7 +136,7 @@ class Path : Map
     }
     private void MoveOnYAxis(bool avoidingObstacle)
     {
-        if(!avoidingObstacle && AgentMapY == ObjectiveMapY)
+        if(!avoidingObstacle && AgentMapY == ObjectiveMapY || AgentMapX == ObjectiveMapX && AgentMapY == ObjectiveMapY)
         {
             return;
         }
@@ -146,7 +145,7 @@ class Path : Map
         //but there is an obstacle in the way
         if(XKlicksFromAgent != 0 && avoidingObstacle)
         {
-            MoveYAxisWithObs();
+            MoveAroundObstacleOnYAxis();
         }
 
         if (YKlicksFromAgent > 0 && !avoidingObstacle)
@@ -163,7 +162,7 @@ class Path : Map
     private void MoveOnXAxis(bool avoidingObstacle)
     {
         //in the case below, the agent has met with the objective, otherwise it is trying to get around an obstacle.
-        if(!avoidingObstacle && AgentMapX == ObjectiveMapX)
+        if(!avoidingObstacle && AgentMapX == ObjectiveMapX || AgentMapX == ObjectiveMapX && AgentMapY == ObjectiveMapY)
         {
             return;
         }
@@ -172,7 +171,7 @@ class Path : Map
         //but there is an obstacle in the way
         if(YKlicksFromAgent != 0 && avoidingObstacle)
         {
-            MoveXAxisWithObs();
+            MoveAroundObstacleOnXAxis();
         }
  
         //when the agent is to the right of the objective
@@ -193,7 +192,7 @@ class Path : Map
     /// When the agent needs to move on the y axis but there is an obstacle in the way.
     /// In this case, this method will be determined whether to go west or east and excecute that.
     /// </summary>
-    private void MoveXAxisWithObs()
+    private void MoveAroundObstacleOnXAxis()
     {
         bool clearPathToTheEast = true;
         bool clearPathToTheWest = true;
@@ -249,7 +248,7 @@ class Path : Map
     /// When the agent needs to move on the X axis but there is an obstacle in the way.
     /// In this case, this method will be determined whether to go north or south and excecute that.
     /// </summary>
-    private void MoveYAxisWithObs()
+    private void MoveAroundObstacleOnYAxis()
     {
         bool clearPathToTheNorth = true;
         bool clearPathToTheSouth = true;
@@ -267,18 +266,18 @@ class Path : Map
         {
             xChange = 1;
         }
-        //check the position east/west north of the agent
+        //check the position north east/west of the agent
         while(Canvas[AgentMapY - northChange , AgentMapX + xChange] != '.')
         { 
-            //If it is clear to move to the east.
-            if(Canvas[AgentMapY - southChange, AgentMapX] != '.')
+            //If it is clear to move to the north.
+            if(Canvas[AgentMapY - northChange, AgentMapX] != '.')
             {
                 clearPathToTheNorth = false;
                 break;
             }  
             northChange++;
         }
-        //check the position east/west south of the agent
+        //check the position south east/west of the agent
         while(Canvas[AgentMapY + southChange, AgentMapX + xChange] != '.')
         { 
             //If it is clear to move to the south.
@@ -295,13 +294,15 @@ class Path : Map
            HeadNorth(northChange);
         }
 
-        if (clearPathToTheSouth)
+        else if (clearPathToTheSouth)
         {
-
            HeadSouth(southChange);
         }
     }
-
+    /// <summary>
+    /// Checks if the path is clear and moves the agent as far north toward the objective as possible
+    /// </summary>
+    /// <param name="klicks">How far you want to send the agent.</param>
     private void HeadNorth(int klicks)
     {
         int counter = 0;
@@ -322,6 +323,7 @@ class Path : Map
                     AgentMapY = ObjectiveMapY;
                     return;
                 }
+                //When there is an obstacle in the way
                 else
                 {
                     AgentMapY -= y-1;
@@ -337,6 +339,7 @@ class Path : Map
                 CheckAndPlot(AgentMapX, AgentMapY-y, 'N');
             }
         }
+        //Move the agent, note direction and how far agent has moved. 
         AgentMapY -= counter;
         Directions.Add("north");
         Directions.Add(counter);
@@ -405,6 +408,7 @@ class Path : Map
                     Directions.Add(counter);
                     AgentMapX = ObjectiveMapX;
                     AgentMapY = ObjectiveMapY;
+                    Console.WriteLine("OOOOOOOOOO");
                     return;
                 }
 
@@ -413,6 +417,7 @@ class Path : Map
                     AgentMapY += y-1;
                     Directions.Add("south");
                     Directions.Add(counter-1);
+                    Console.WriteLine("bbbbbbbbbbbbbb");
                     ObstacleInTheWay(["East","West"]);
                     return;
                 }                    
@@ -423,6 +428,7 @@ class Path : Map
                 CheckAndPlot(AgentMapX, AgentMapY+y, 'S');
             }
         }
+        Console.WriteLine("aaaaaaaaaaaaaa");
         AgentMapY += counter;
         Directions.Add("south");
         Directions.Add(counter);
