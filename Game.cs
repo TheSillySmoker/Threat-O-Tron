@@ -245,18 +245,11 @@ class Game
                 {
                     Console.WriteLine("The objective is blocked by an obstacle and cannot be reached.");
                 }
-                // else if(path.Directions.Count == 0)
-                // {
-                //     Console.WriteLine("There is no safe path to the objective.");
-                // }
                 else
                 {
                     path.AttemptMission();
                     path.PrintMap();
-                    foreach(string direction in path.Directions)
-                    {
-                        Console.WriteLine(direction);
-                    }
+                    PrintPathDirections(path.Directions);
                 }
                 
             }      
@@ -264,6 +257,33 @@ class Game
         catch(ArgumentException exception)
         {
             Console.WriteLine(exception.Message);
+        }
+    }
+
+    /// <summary>
+    /// Takes a list of directions and distances and writes them to console.
+    /// </summary>
+    /// <param name="directions"></param>
+    private static void PrintPathDirections(List<object> directions)
+    {
+       
+                    
+        for(int i = 0; i < directions.Count-1; i++)
+        {
+
+            if (directions[i+1] is int klicks && klicks > 0)
+            {
+                Console.Write($"Head {directions[i]} for ");
+                Console.Write($"{Convert.ToString(klicks)}");
+                if(klicks == 1)
+                {
+                    Console.WriteLine(" klick.");
+                }
+                else 
+                {
+                    Console.WriteLine(" klicks.");
+                }
+            }
         }
     }
 
