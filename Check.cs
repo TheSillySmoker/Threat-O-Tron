@@ -12,14 +12,14 @@ class Check : Map
     /// <summary>
     /// Constructs a check object that can be used for printing out which shows the surrounding unobstructed directions.
     /// </summary>
-    /// <param name="southWestX">The X Coodinate for the southwest point of the map that will be instatiated.</param>
-    /// <param name="southWestY">The Y Coodinate for the southwest point of the map that will be instatiated.</param>
+    /// <param name="agentGameX">The game X Coodinate of your agent.</param>
+    /// <param name="agentGameY">The game Y Coodinate of your agent.</param>
     /// <param name="obstacles">Existing obstacles in the game.</param>
-    public Check(int southWestX, int southWestY, List<IObstacle> obstacles) : base(southWestX, southWestY, 3, 3, obstacles)
+    public Check(int agentGameX, int agentGameY, List<IObstacle> obstacles) : base(agentGameX -1, agentGameY -1, 3, 3, obstacles)
     {
         //The agent's position will be in the middle of the map.
         //In a check, the map is 3x3 in size so we need to adjust up and across by 1 to get the centre. 
-        GetMapCoordinates(southWestX + 1, southWestY + 1, out int agentMapX, out int agentMapY);
+        GetMapCoordinates(agentGameX, agentGameY, out int agentMapX, out int agentMapY);
         AgentMapX = agentMapX;
         AgentMapY = agentMapY;
     }

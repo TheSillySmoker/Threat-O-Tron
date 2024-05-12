@@ -90,6 +90,12 @@ class Map
         mapX = gameX - SouthWestX;
     }
 
+    public void GetGameCoordinates(int mapX, int mapY, out int gameX, out int gameY)
+    {
+        gameX = Height - 1 - mapX + SouthWestY;
+        gameY = mapY + SouthWestY;
+    }
+
     /// <summary>
     /// Checks to see if the point given will be on the map and plot it if it is. This takes canvas Coordinates, not game coordinates.
     /// </summary>

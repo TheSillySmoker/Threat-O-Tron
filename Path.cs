@@ -50,7 +50,7 @@ class Path : Map
     //When calling the Map constructor in base:
     //The southwest point will be the lowest Y (south) and X (west) given by the agent and the objective. Minus 1 on both X and Y to provide padding around the objective or agent. 
     //The size will be the distance between agent's and objective's Xs and Ys. Plus 3 to account for 0 based arrays and padding. 
-    : base(GetLowerNumber(agentGameX, objectiveGameX)-15, GetLowerNumber(agentGameY, objectiveGameY)-15,  Math.Abs(objectiveGameX - agentGameX)+20, Math.Abs(objectiveGameY - agentGameY)+20, obstacles)
+    : base(GetLowerNumber(agentGameX, objectiveGameX)-10, GetLowerNumber(agentGameY, objectiveGameY)-10,  Math.Abs(objectiveGameX - agentGameX)+20, Math.Abs(objectiveGameY - agentGameY)+20, obstacles)
     {
         GetMapCoordinates(agentGameX, agentGameY, out int agentMapX, out int agentMapY);
         AgentMapX = agentMapX;
@@ -121,8 +121,16 @@ class Path : Map
 
     private void ObstacleInTheWay(List<string> options)
     {   
-        Check check = new Check(AgentMapX, AgentMapY, Obstacles);
+        Console.WriteLine("OBS");
+        GetGameCoordinates(AgentMapX, AgentMapY, out int agentGameX, out int agentGameY); //TODO: fix this
+        Check check = new Check(agentGameX, agentGameY, Obstacles);
+        check.PrintSafeDirections();
         List<string> safeDirections = check.GetSafeDirections();
+        foreach(string direction in safeDirections)
+        {
+            Console.WriteLine($"Directions {direction}");
+        }
+            
         if(safeDirections.Contains(options[0]) || safeDirections.Contains(options[1]))
         {
             if (options[0] == "North" || options[1] == "South")
@@ -229,7 +237,7 @@ class Path : Map
         
         //check the position north/south west of the agent
         //AND checks if the point you are checking will actually be on the map.
-        while(Canvas[AgentMapY + yChange, AgentMapX - westChange] != '.' && westChange -2 < Width -(Width - AgentMapX) - 1 )
+        while(Canvas[AgentMapY + yChange, AgentMapX - westChange] != '.' && westChange - 2 < Width -(Width - AgentMapX) - 1 )
         { 
             Console.WriteLine(westChange);
             //If it is clear to move to the west.
@@ -241,7 +249,6 @@ class Path : Map
             westChange++;
         }
 
-        //TODO: Add priority
         if(clearPathToTheEast)
         {   
            HeadEast(eastChange);
@@ -259,6 +266,7 @@ class Path : Map
     /// </summary>
     private void MoveAroundObstacleOnYAxis()
     {
+        Console.WriteLine("MOving around obs");
         bool clearPathToTheNorth = true;
         bool clearPathToTheSouth = true;
         int northChange = 1;
@@ -275,6 +283,7 @@ class Path : Map
         {
             xChange = 1;
         }
+        Console.WriteLine($"AgentmapX: {AgentMapX}, AgentMapY: {AgentMapY}\nHeight: {Height}");
         //check the position north east/west of the agent
         while(Canvas[AgentMapY - northChange , AgentMapX + xChange] != '.')
         { 
@@ -285,17 +294,31 @@ class Path : Map
                 break;
             }  
             northChange++;
+            
+            //check if the next position will be on the map     
+            if(northChange  > Height - (Height -AgentMapY))
+            {
+                clearPathToTheNorth = false;
+                break;
+            }
         }
         //check the position south east/west of the agent
-        while(Canvas[AgentMapY + southChange, AgentMapX + xChange] != '.')
+        while(Canvas[AgentMapY + southChange, AgentMapX + xChange] != '.' )
         { 
             //If it is clear to move to the south.
-            if(Canvas[AgentMapY + southChange, AgentMapX] != '.')
+            if(Canvas[AgentMapY + southChange, AgentMapX] != '.' )
             {
                 clearPathToTheSouth = false;
                 break;
             }  
             southChange++;
+            
+            //check if the next position will be on the map
+            if(southChange + 1 > Height - (Height - (Height -AgentMapY)))
+            {
+                clearPathToTheSouth = false;
+                break;
+            }
         }
         
         if(clearPathToTheNorth)
@@ -305,9 +328,13 @@ class Path : Map
 
         else if (clearPathToTheSouth)
         {
-           HeadSouth(southChange);
+            Console.WriteLine(southChange);
+            HeadSouth(southChange);
         }
+        
+
     }
+
 
     /// <summary>
     /// Checks if the path is clear and moves the agent as far north toward the objective as possible
@@ -343,7 +370,7 @@ class Path : Map
                     return;
                 }                    
             }
-            
+
             //No obstacle in the way
             else
             {
@@ -381,10 +408,12 @@ class Path : Map
                 //When there is an obstacle in the way
                 else 
                 {
-                    AgentMapX += x-1;
+                    
+                    AgentMapX += x -1;
+                    Console.WriteLine($"x:{AgentMapX}, y: {AgentMapY} ");
                     Directions.Add("east");
                     Directions.Add(counter-1);
-                    ObstacleInTheWay(["North","South"]);
+                    ObstacleInTheWay(["North","South"]);                   
                     return;
                 }                    
             }

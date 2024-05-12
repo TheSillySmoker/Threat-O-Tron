@@ -207,7 +207,7 @@ class Game
             }
             
             //creates a new check which creates a new map; subtract 1 from x and y to make the the map's southwest point south west of the agent.
-            Check check = new Check(agentX-1, agentY-1, obstacles);
+            Check check = new Check(agentX, agentY, obstacles);
             check.PrintSafeDirections();
         }
         catch(ArgumentException exception)
@@ -249,10 +249,11 @@ class Game
                 {
                     path.AttemptMission();
                     path.PrintMap();
+                    Console.WriteLine("The following path will take you to the objective:");
                     PrintPathDirections(path.Directions);
                 }
                 
-            }      
+            }
         }
         catch(ArgumentException exception)
         {
