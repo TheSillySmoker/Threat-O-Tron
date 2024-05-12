@@ -17,7 +17,7 @@ class Path : Map
     private int AgentMapX{get; set;}
     private int AgentMapY{get; set;}
 
-    private int XKlicksFromAgent 
+    private int XKlicksFromOjective 
     {
         get
         {
@@ -25,7 +25,7 @@ class Path : Map
         }
     }
 
-    private int YKlicksFromAgent
+    private int YKlicksFromOjective
     {
         get
         {
@@ -50,12 +50,12 @@ class Path : Map
     //When calling the Map constructor in base:
     //The southwest point will be the lowest Y (south) and X (west) given by the agent and the objective. Minus 1 on both X and Y to provide padding around the objective or agent. 
     //The size will be the distance between agent's and objective's Xs and Ys. Plus 3 to account for 0 based arrays and padding. 
-    : base(GetLowerNumber(agentGameX, objectiveGameX)-10, GetLowerNumber(agentGameY, objectiveGameY)-10,  Math.Abs(objectiveGameX - agentGameX)+20, Math.Abs(objectiveGameY - agentGameY)+20, obstacles) //old:GetLowerNumber(agentGameX, objectiveGameX)-1, GetLowerNumber(agentGameY, objectiveGameY)-1,
+    : base(GetLowerNumber(agentGameX, objectiveGameX)-15, GetLowerNumber(agentGameY, objectiveGameY)-15,  Math.Abs(objectiveGameX - agentGameX)+20, Math.Abs(objectiveGameY - agentGameY)+20, obstacles)
     {
-
         GetMapCoordinates(agentGameX, agentGameY, out int agentMapX, out int agentMapY);
         AgentMapX = agentMapX;
         AgentMapY = agentMapY;
+
         GetMapCoordinates(objectiveGameX, objectiveGameY, out int objectiveMapX, out int objectiveMapY);
         ObjectiveMapX = objectiveMapX;
         ObjectiveMapY = objectiveMapY;
@@ -83,7 +83,7 @@ class Path : Map
     }
 
     /// <summary>
-    /// Checks to see if the objective will be compromised.
+    /// Checks to see if the objective will be compromised before attempting to generate a path.
     /// </summary>
     /// <returns>Boolean value weather the objective is on a compromised location.</returns>
     public bool ObjectiveIsBlocked()
@@ -97,6 +97,7 @@ class Path : Map
             return false;
         }
     }
+
     /// <summary>
     /// Plots agent and objective on the map and begins the attempt to find the path from agent to objective.
     /// </summary>
@@ -105,7 +106,7 @@ class Path : Map
         CheckAndPlot(AgentMapX, AgentMapY, 'A');
         CheckAndPlot(ObjectiveMapX, ObjectiveMapY, 'O');
         //adjust the ordering to start with the smaller distance
-        if (XKlicksFromAgent > YKlicksFromAgent)
+        if (XKlicksFromOjective > YKlicksFromOjective)
         {
             MoveOnYAxis(false);  
             MoveOnXAxis(false);
@@ -134,58 +135,58 @@ class Path : Map
             }
         }
     }
+
     private void MoveOnYAxis(bool avoidingObstacle)
     {
-        if(!avoidingObstacle && AgentMapY == ObjectiveMapY || AgentMapX == ObjectiveMapX && AgentMapY == ObjectiveMapY)
+        if(!avoidingObstacle && AgentMapY == ObjectiveMapY)
         {
             return;
         }
 
         //when the agent is in-line with the objective on the x axis but not on the y.
         //but there is an obstacle in the way
-        if(XKlicksFromAgent != 0 && avoidingObstacle)
+        if(XKlicksFromOjective != 0 && avoidingObstacle)
         {
             MoveAroundObstacleOnYAxis();
         }
 
-        if (YKlicksFromAgent > 0 && !avoidingObstacle)
+        if (YKlicksFromOjective > 0 && !avoidingObstacle)
         {
-            HeadSouth(YKlicksFromAgent);
+            HeadSouth(YKlicksFromOjective);
         }
 
-        if (YKlicksFromAgent < 0 && !avoidingObstacle)
+        if (YKlicksFromOjective < 0 && !avoidingObstacle)
         {
-            HeadNorth(YKlicksFromAgent);
+            HeadNorth(YKlicksFromOjective);
         }
     }   
 
     private void MoveOnXAxis(bool avoidingObstacle)
     {
         //in the case below, the agent has met with the objective, otherwise it is trying to get around an obstacle.
-        if(!avoidingObstacle && AgentMapX == ObjectiveMapX || AgentMapX == ObjectiveMapX && AgentMapY == ObjectiveMapY)
+        if(!avoidingObstacle && AgentMapX == ObjectiveMapX)
         {
             return;
         }
 
-        //when the agent is in-line with the objective on the x axis but not on the y.
+        //when the agent is not in-line with the y.
         //but there is an obstacle in the way
-        if(YKlicksFromAgent != 0 && avoidingObstacle)
+        if(YKlicksFromOjective != 0 && avoidingObstacle)
         {
             MoveAroundObstacleOnXAxis();
         }
  
         //when the agent is to the right of the objective
-        if (XKlicksFromAgent > 0 && !avoidingObstacle)
+        if (XKlicksFromOjective > 0 && !avoidingObstacle)
         {
-            HeadEast(XKlicksFromAgent);
+            HeadEast(XKlicksFromOjective);
         }
 
         //when the agent is to the left of the objective
-        if (XKlicksFromAgent < 0 && !avoidingObstacle)
+        if (XKlicksFromOjective < 0 && !avoidingObstacle)
         {
-            HeadWest(XKlicksFromAgent);
+            HeadWest(XKlicksFromOjective);
         }
-
     }
 
     /// <summary>
@@ -201,37 +202,45 @@ class Path : Map
         int yChange;
 
         //When the agent needs to head north.
-        if(YKlicksFromAgent < 0)
+        if(YKlicksFromOjective < 0)
         {
             yChange = -1;
         }
+
         //When agent needs to head south.
         else 
         {
             yChange = 1;
         }
+
         //check the position north/south east of the agent
-        while(Canvas[AgentMapY + yChange, AgentMapX + eastChange] != '.')
+        //AND checks if the point you are checking will actually be on the map.
+        while(Canvas[AgentMapY + yChange, AgentMapX + eastChange] != '.' && eastChange + 2 < Width - (Width - (Width - AgentMapX)) - 1)
         { 
-            //If it is clear to move to the east.
-            if(Canvas[AgentMapY, AgentMapX + eastChange] != '.')
+            //If it is not clear to move to the east.
+            //OR if you are checking somewhere that is off the map.
+            if(Canvas[AgentMapY, AgentMapX + eastChange] != '.' || eastChange +2 < Width - (Width - (Width - AgentMapX)) - 1)
             {
                 clearPathToTheEast = false;
                 break;
             }
             eastChange++;
         }
+        
         //check the position north/south west of the agent
-        while(Canvas[AgentMapY + yChange, AgentMapX - westChange] != '.')
+        //AND checks if the point you are checking will actually be on the map.
+        while(Canvas[AgentMapY + yChange, AgentMapX - westChange] != '.' && westChange -2 < Width -(Width - AgentMapX) - 1 )
         { 
+            Console.WriteLine(westChange);
             //If it is clear to move to the west.
-            if(Canvas[AgentMapY, AgentMapX - westChange] != '.')
+            if(Canvas[AgentMapY, AgentMapX - westChange] != '.' || westChange -2 < Width -(Width - AgentMapX) - 1)
             {
                 clearPathToTheWest = false;
                 break;
             }  
             westChange++;
         }
+
         //TODO: Add priority
         if(clearPathToTheEast)
         {   
@@ -244,7 +253,7 @@ class Path : Map
         }
     }
 
-        /// <summary>
+    /// <summary>
     /// When the agent needs to move on the X axis but there is an obstacle in the way.
     /// In this case, this method will be determined whether to go north or south and excecute that.
     /// </summary>
@@ -257,7 +266,7 @@ class Path : Map
         int xChange;
 
         //When the agent needs to head East.
-        if(XKlicksFromAgent < 0)
+        if(XKlicksFromOjective < 0)
         {
             xChange = -1;
         }
@@ -299,6 +308,7 @@ class Path : Map
            HeadSouth(southChange);
         }
     }
+
     /// <summary>
     /// Checks if the path is clear and moves the agent as far north toward the objective as possible
     /// </summary>
@@ -333,6 +343,7 @@ class Path : Map
                     return;
                 }                    
             }
+            
             //No obstacle in the way
             else
             {
@@ -348,7 +359,6 @@ class Path : Map
 
     private void HeadEast(int klicks)
     {
-        Console.WriteLine($"east klicks: {klicks}");
         int counter = 0;
 
         for (int x = 1; x < klicks + 1; x++)
@@ -367,7 +377,8 @@ class Path : Map
                     AgentMapY = ObjectiveMapY;
                     return;
                 }
-                
+
+                //When there is an obstacle in the way
                 else 
                 {
                     AgentMapX += x-1;
@@ -377,6 +388,7 @@ class Path : Map
                     return;
                 }                    
             }
+
             //No obstacle in the way
             else
             {
@@ -408,27 +420,26 @@ class Path : Map
                     Directions.Add(counter);
                     AgentMapX = ObjectiveMapX;
                     AgentMapY = ObjectiveMapY;
-                    Console.WriteLine("OOOOOOOOOO");
                     return;
                 }
 
+                //When there is an obstacle in the way
                 else
                 {
                     AgentMapY += y-1;
                     Directions.Add("south");
                     Directions.Add(counter-1);
-                    Console.WriteLine("bbbbbbbbbbbbbb");
                     ObstacleInTheWay(["East","West"]);
                     return;
                 }                    
             }
+
             //No obstacle in the way
             else
             {
                 CheckAndPlot(AgentMapX, AgentMapY+y, 'S');
             }
         }
-        Console.WriteLine("aaaaaaaaaaaaaa");
         AgentMapY += counter;
         Directions.Add("south");
         Directions.Add(counter);
@@ -454,6 +465,8 @@ class Path : Map
                     AgentMapY = ObjectiveMapY;
                     return;
                 }
+
+                //When there is an obstacle in the way
                 else
                 {
                     AgentMapX -= x-1;
@@ -463,6 +476,7 @@ class Path : Map
                     return;
                 }                    
             }
+
             //No obstacle in the way
             else
             {
