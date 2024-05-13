@@ -1,12 +1,11 @@
-using System.Drawing;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
+using System;
+using System.Collections.Generic;
 
 namespace Threat_o_tron;
 
 class Map
 {
-
+    // JSS CodeReview: This could either be protected or private with a getter method for a character on the Canvas.
     public char[,] Canvas;
     private readonly int SouthWestX;
     private readonly int SouthWestY;
@@ -28,7 +27,7 @@ class Map
         Height = height;
         Canvas = new char[Height,Width];
 
-        //Populate all spots in the canvas with '.'
+        // Populate all spots in the canvas with '.'.
         for (int y = 0; y < Height; y++)
         {
             for (int x = 0; x < Width; x++)
@@ -37,7 +36,7 @@ class Map
             }
         }
 
-        //Draw each obstacle that exists in the game on this map
+        // Draw each obstacle that exists in the game on this map.
         foreach (IObstacle obstacle in obstacles)
         {
             obstacle.DrawOnMap(this);
@@ -62,12 +61,14 @@ class Map
     /// <summary>
     /// Checks to see if the given point exists on this map.
     /// </summary>
-    /// <param name="xOrigin">X corrdinate of Obstacle in the game.</param>
+    /// JSS CodeReview: Would a better name for these parameters be mapX and mapY?
+    /// <param name="xOrigin">X coordinate of Obstacle in the game.</param>
     /// <param name="yOrigin">Y coordinate of Obstacle in the game.</param>
-    /// <returns>True or false whether the map contains the given point.</returns>
+    /// <returns>True if the map contains the given point.</returns>
     protected bool ContainsPoint(int xOrigin, int yOrigin)
     {
-        if(xOrigin <= Width-1 && xOrigin >= 0 && yOrigin <= Height-1 && yOrigin >= 0)
+        // JSS CodeReview: This could be written as: "return xOrigin <= Width - 1 && xOrigin >= 0 && yOrigin <= Height - 1 && yOrigin >= 0;".
+        if(xOrigin <= Width - 1 && xOrigin >= 0 && yOrigin <= Height - 1 && yOrigin >= 0)
         {
             return true;
         }
@@ -80,13 +81,13 @@ class Map
     /// <summary>
     /// Finds where the object's starting coordinates for the map, not the game's coordinates!.
     /// </summary>
-    /// <param name="gameX">X corrdinate of the object in the game.</param>
+    /// <param name="gameX">X coordinate of the object in the game.</param>
     /// <param name="gameY">Y coordinate of the object in the game.</param>
     /// <param name="mapX">The start X coordinate of the object on the map.</param>
     /// <param name="mapY">The start Y coordinate of the object on the map.</param>
     public void GetMapCoordinates(int gameX, int gameY, out int mapX, out int mapY)
     {
-        mapY = Height-1 - (gameY - SouthWestY);
+        mapY = Height - 1 - (gameY - SouthWestY);
         mapX = gameX - SouthWestX;
     }
 
@@ -97,10 +98,10 @@ class Map
     }
 
     /// <summary>
-    /// Checks to see if the point given will be on the map and plot it if it is. This takes canvas Coordinates, not game coordinates.
+    /// Checks to see if the given point will be on the map and plots it, if it is. This takes canvas coordinates, not Game coordinates.
     /// </summary>
-    /// <param name="mapX">X coordinate on the map's canvas that will be plotted.</param>
-    /// <param name="mapY">Y coordinate on the map's canvas that will be plotted.</param>
+    /// <param name="mapX">X coordinate on the Map's canvas that will be plotted.</param>
+    /// <param name="mapY">Y coordinate on the Map's canvas that will be plotted.</param>
     /// <param name="character">The character that will be plotted on the map.</param>
     public void CheckAndPlot(int mapX, int mapY, char character)
     {

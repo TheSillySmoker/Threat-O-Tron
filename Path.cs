@@ -1,27 +1,23 @@
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.Metrics;
-using System.Dynamic;
-using System.Linq.Expressions;
-using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.Win32.SafeHandles;
+using System;
+using System.Collections.Generic;
 
 namespace Threat_o_tron;
 
 class Path : Map
 {
-
-    public List<Object> Directions {get; private set;}
+    // JSS CodeReview: Using the object keyword makes it really hard to understand. 
+    //                 Have you considered using KeyValuePair<string, int>?
+    //                 The best thing to do would be to introduce your own class type.
+    public List<object> Directions {get; private set;}
     private int AgentMapX{get; set;}
     private int AgentMapY{get; set;}
 
+    // JSS CodeReview: Some part of me is thinking that these should be getter methods, but I'm not bothered either way.
     private int XKlicksFromOjective 
     {
         get
         {
-        return ObjectiveMapX - AgentMapX;
+            return ObjectiveMapX - AgentMapX;
         }
     }
 
@@ -33,13 +29,12 @@ class Path : Map
         }
     }
 
-
     private readonly int ObjectiveMapX;
     private readonly int ObjectiveMapY;
     private readonly List<IObstacle> Obstacles;
 
     /// <summary>
-    /// Instantiates a new path object that will attempt to find a safe path from an agent's starting point to an objective. 
+    /// Instantiates a new Path object that will attempt to find a safe path from an agent's starting point to an objective. 
     /// </summary>
     /// <param name="agentGameX">The X coordinate for the agent in the game.</param>
     /// <param name="agentGameY">The Y coordinate for the agent in the game.</param>
@@ -47,10 +42,18 @@ class Path : Map
     /// <param name="objectiveGameX">The Y coordinate for the objective in the game.</param>
     /// <param name="obstacles">The obstacles in the game. The agent will avoid these on its' path.</param>
     public Path(int agentGameX, int agentGameY, int objectiveGameX, int objectiveGameY, List<IObstacle> obstacles) 
-    //When calling the Map constructor in base:
-    //The southwest point will be the lowest Y (south) and X (west) given by the agent and the objective. Minus 1 on both X and Y to provide padding around the objective or agent. 
-    //The size will be the distance between agent's and objective's Xs and Ys. Plus 3 to account for 0 based arrays and padding. 
-    : base(GetLowerNumber(agentGameX, objectiveGameX)-10, GetLowerNumber(agentGameY, objectiveGameY)-10,  Math.Abs(objectiveGameX - agentGameX)+20, Math.Abs(objectiveGameY - agentGameY)+20, obstacles)
+    // When calling the Map constructor in base:
+    // The southwest point will be the lowest Y (south) and X (west) given by the agent and the objective. Minus 1 on both X and Y to provide padding around the objective or agent. 
+    // The size will be the distance between agent's and objective's Xs and Ys. Plus 3 to account for 0 based arrays and padding. 
+    // JSS CodeReview: Does this look more readable?
+    : base(
+        // JSS CodeReview: Based on your above comment, I'm assuming you're setting these to 15 and 20 for testing purposes and will change them back later?
+        GetLowerNumber(agentGameX, objectiveGameX) - 15, 
+        GetLowerNumber(agentGameY, objectiveGameY) - 15, 
+        Math.Abs(objectiveGameX - agentGameX) + 20, 
+        Math.Abs(objectiveGameY - agentGameY) + 20, 
+        obstacles
+    )
     {
         GetMapCoordinates(agentGameX, agentGameY, out int agentMapX, out int agentMapY);
         AgentMapX = agentMapX;
@@ -64,6 +67,8 @@ class Path : Map
 
         Directions = [];
     }
+
+    // JSS CodeReview: Use Math.Min() instead.
     /// <summary>
     /// Takes two ints and returns the smaller number.
     /// </summary>
@@ -85,9 +90,12 @@ class Path : Map
     /// <summary>
     /// Checks to see if the objective will be compromised before attempting to generate a path.
     /// </summary>
-    /// <returns>Boolean value weather the objective is on a compromised location.</returns>
+    /// <returns>True if the objective is on a compromised location.</returns>
+    // JSS CodeReview: A better name would be IsObjectiveBlocked. 
+    //                 The "Is" indicates that it's a bool function without even needing to read the method declaration.
     public bool ObjectiveIsBlocked()
     {
+        // JSS CodeReview: This can be simplified as: "return Canvas[ObjectiveMapY, ObjectiveMapX] != '.';".
         if (Canvas[ObjectiveMapY, ObjectiveMapX] != '.')
         {
             return true;
@@ -103,9 +111,12 @@ class Path : Map
     /// </summary>
     public void AttemptMission()
     {
+        // JSS CodeReview: You check if the objective is blocked, but not the agent's starting position.
+        //                 You could assert that both the agent and objective's coordinates are not blocked?
         CheckAndPlot(AgentMapX, AgentMapY, 'A');
         CheckAndPlot(ObjectiveMapX, ObjectiveMapY, 'O');
-        //adjust the ordering to start with the smaller distance
+
+        // Adjust the ordering to start with the smaller distance.
         if (XKlicksFromOjective > YKlicksFromOjective)
         {
             MoveOnYAxis(false);  
@@ -116,7 +127,6 @@ class Path : Map
             MoveOnXAxis(false);
             MoveOnYAxis(false);    
         }  
-
     }
 
     private void ObstacleInTheWay(List<string> options)

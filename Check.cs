@@ -1,6 +1,6 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection.PortableExecutable;
-using System.Security.Cryptography;
 
 namespace Threat_o_tron;
 
@@ -30,6 +30,7 @@ class Check : Map
     /// <returns>A list of strings (directions).</returns>
     public List<string> GetSafeDirections()
     {
+        // JSS CodeReview: You can do List<string> safeDirections = [].
         List<string> safeDirections = new List<string>();
         if(CheckIfSafe(AgentMapX, AgentMapY-1))
         {
@@ -59,6 +60,7 @@ class Check : Map
     private bool CheckIfSafe(int x, int y)
     {
         Debug.Assert(ContainsPoint(x,y), "Your x and y should be in the map you have created");
+        // JSS CodeReview: This could be written as "return Canvas[y,x] == '.';".
         if (Canvas[y,x] == '.')
         {
             return true;
@@ -75,13 +77,13 @@ class Check : Map
     /// </summary>
     public void PrintSafeDirections()
     {
-        //check the agents location
+        // Check the agents location.
         if(!CheckIfSafe(AgentMapX,AgentMapY))
         {
             Console.WriteLine("Agent, your location is compromised. Abort mission.");
             return;
         }
-        //get agent's surroundings and print them if there are any.
+        // Get agent's surroundings and print them if there are any.
         List<string> safeDirections = GetSafeDirections();
         if (safeDirections.Count > 0)
         {

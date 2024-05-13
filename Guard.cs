@@ -7,7 +7,7 @@ namespace Threat_o_tron;
 class Guard : IObstacle
 {
     /// <summary>
-    /// GameX and GameY is the guard's location in the game
+    /// GameX and GameY is the Guard's location in the game.
     /// </summary>
     private readonly int GameX;
     private readonly int GameY;
@@ -23,15 +23,13 @@ class Guard : IObstacle
     }
 
     /// <summary>
-    /// Plots a 'G' where the guard coordinates are on the provided map.
+    /// Plots a 'G' where the Guard's coordinates are on the provided map.
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
-    /// <returns></returns>
     public void DrawOnMap(Map map){
-        //where to plot the symbol on the map
+        // Establish startpoint for plotting the symbol on the Map; this will be the Map's canvas coordinates, not the Game's.
         map.GetMapCoordinates(GameX, GameY, out int MapX, out int MapY);
-        //check to see if the guard will be on the proposed map and plot it if it is.
+        // JSS CodeReview: Removed this comment because it's not stated in any of the other obstacle classes.
         map.CheckAndPlot(MapX, MapY, 'G');
-
     }
 }

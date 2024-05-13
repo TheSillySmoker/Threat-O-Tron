@@ -11,10 +11,10 @@ class Fence : IObstacle{
     private readonly string Orientation;
     
     /// <summary>
-    /// Creates a new Fence with origin coordinates, orientation and length 
+    /// Creates a new Fence with origin coordinates, orientation and length.
     /// </summary>
-    /// <param name="x">The X Coordinate of the Fence in the game.</param>
-    /// <param name="y">The Y Coordinate of the Fence in the game.</param>
+    /// <param name="x">The X coordinate of the Fence in the game.</param>
+    /// <param name="y">The Y coordinate of the Fence in the game.</param>
     /// <param name="orientation">Which way the Fence is spanning.</param>
     /// <param name="length">The length of the Fence in klicks.</param>
     public Fence(int x, int y, string orientation, int length)
@@ -26,27 +26,28 @@ class Fence : IObstacle{
     }
     
     /// <summary>
-    /// Takes an existing map's canvas and plots this obstacle onto it.
+    /// Plots an 'F' where the Fence exists on the provided Map.
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
     public void DrawOnMap(Map map)
     {
-        //Establish startpoint for ploting the symbol on the map
+        // Establish startpoint for plotting the symbol on the Map; this will be the Map's canvas coordinates, not the Game's.
         map.GetMapCoordinates(StartGameX, StartGameY, out int startOnMapX, out int startOnMapY);
+
         if (Orientation == "EAST")
         {
             for(int x = 0; x < Length; x++)
             {
-                //Add x to get the next point and plot
+                // Add x to get the next point and plot.
                 map.CheckAndPlot(startOnMapX + x, startOnMapY, 'F');
             }
         }
-        if (Orientation == "NORTH")
+        else if (Orientation == "NORTH")
         {
-            for(int i = 0; i < Length; i++)
+            for(int y = 0; y < Length; y++)
             {
-                //Subtract y to get the next point and plot
-                map.CheckAndPlot(startOnMapX, startOnMapY - i, 'F');
+                // Subtract y to get the next point and plot.
+                map.CheckAndPlot(startOnMapX, startOnMapY - y, 'F');
             }
         }
     }
