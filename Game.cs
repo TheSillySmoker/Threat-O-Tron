@@ -7,12 +7,14 @@ namespace Threat_o_tron;
 // JSS CodeReview: Have you considered implementing an enum for north,south,east,west directions? I can help you with that.
 class Game
 {
+    /// <summary>
+    /// Represents a direction that can be taken on a Map.
+    /// </summary>
     public enum Direction {
         North,
         East,
         West,
-        South,
-        Unknown
+        South
     }
 
     // JSS CodeReview: It would be more correct to instantiate this list in the Game constructor.
