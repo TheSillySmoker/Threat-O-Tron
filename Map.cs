@@ -5,8 +5,7 @@ namespace Threat_o_tron;
 
 class Map
 {
-    // JSS CodeReview: This could either be protected or private with a getter method for a character on the Canvas.
-    public char[,] Canvas;
+    protected char[,] Canvas;
     private readonly int SouthWestX;
     private readonly int SouthWestY;
     public int Width{get;}          
@@ -61,21 +60,12 @@ class Map
     /// <summary>
     /// Checks to see if the given point exists on this map.
     /// </summary>
-    /// JSS CodeReview: Would a better name for these parameters be mapX and mapY?
-    /// <param name="xOrigin">X coordinate of Obstacle in the game.</param>
-    /// <param name="yOrigin">Y coordinate of Obstacle in the game.</param>
+    /// <param name="mapX">X coordinate of Obstacle in the game.</param>
+    /// <param name="mapY">Y coordinate of Obstacle in the game.</param>
     /// <returns>True if the map contains the given point.</returns>
-    protected bool ContainsPoint(int xOrigin, int yOrigin)
+    protected bool ContainsPoint(int mapX, int mapY)
     {
-        // JSS CodeReview: This could be written as: "return xOrigin <= Width - 1 && xOrigin >= 0 && yOrigin <= Height - 1 && yOrigin >= 0;".
-        if(xOrigin <= Width - 1 && xOrigin >= 0 && yOrigin <= Height - 1 && yOrigin >= 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return mapX <= Width - 1 && mapX >= 0 && mapY <= Height - 1 && mapY >= 0;
     }
 
     /// <summary>
