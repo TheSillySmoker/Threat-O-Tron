@@ -36,35 +36,42 @@ static class Program
             // Make all inputs from the user not case sensitive.
             string[] inputMessageArguments = inputMessage.ToUpper().Split(' ');
             // Filter the first argument/command given by the user.
-            switch (inputMessageArguments[0])
+            try
             {
-                case "ADD":
-                    // JSS CodeReview: See comments in Game class. Move catch clause here.
-                    game.Add(inputMessageArguments); 
-                    break;
-                case "CHECK":
-                    // JSS CodeReview: See comment in Game class. Move catch clause here.
-                    game.Check(inputMessageArguments);
-                    break;
-                case "MAP":
-                    // JSS CodeReview: See comment in Game class. Move catch clause here.
-                    game.MakeMap(inputMessageArguments);
-                    break;
-                case "PATH":
-                    // JSS CodeReview: See comment in Game class. Move catch clause here.
-                    game.Path(inputMessageArguments);
-                    break;
-                case "HELP":
-                    PrintValidCommands();
-                    break;
-                case "EXIT":
-                    Console.WriteLine("Thank you for using the Threat-o-tron 9000.");
-                    exiting = true;
-                    break;
-                default:
-                    // Instead of getting the uppercase version of the input, this line will get the exact input to give back to the user. 
-                    Console.WriteLine($"Invalid option: {inputMessage.Split(' ')[0]}\nType 'help' to see a list of commands.");
-                    break;
+                switch (inputMessageArguments[0])
+                {
+                    case "ADD":
+                        // JSS CodeReview: See comments in Game class. Move catch clause here.
+                        game.Add(inputMessageArguments); 
+                        break;
+                    case "CHECK":
+                        // JSS CodeReview: See comment in Game class. Move catch clause here.
+                        game.Check(inputMessageArguments);
+                        break;
+                    case "MAP":
+                        // JSS CodeReview: See comment in Game class. Move catch clause here.
+                        game.MakeMap(inputMessageArguments);
+                        break;
+                    case "PATH":
+                        // JSS CodeReview: See comment in Game class. Move catch clause here.
+                        game.Path(inputMessageArguments);
+                        break;
+                    case "HELP":
+                        PrintValidCommands();
+                        break;
+                    case "EXIT":
+                        Console.WriteLine("Thank you for using the Threat-o-tron 9000.");
+                        exiting = true;
+                        break;
+                    default:
+                        // Instead of getting the uppercase version of the input, this line will get the exact input to give back to the user. 
+                        Console.WriteLine($"Invalid option: {inputMessage.Split(' ')[0]}\nType 'help' to see a list of commands.");
+                        break;
+                }
+            }
+            catch(ArgumentException exception)
+            {
+                Console.WriteLine(exception.Message);
             }
         }
         // Repeat if the user does not wish to exit.
@@ -76,7 +83,6 @@ static class Program
     /// </summary>
     public static void PrintValidCommands()
     {
-        // JSS CodeReview: How does this look? This is more what I had in mind. Change it back if you don't like it.
         Console.WriteLine(
             "Valid commands are:\n" +
             "add guard <x> <y>: registers a guard obstacle\n" +
