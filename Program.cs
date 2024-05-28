@@ -13,11 +13,10 @@ static class Program
     /// Writes a string/prompt to the CLI, then reads a string afterward.
     /// </summary>
     /// <param name="inputMessage">The prompt that will be shown to the user.</param>
-    /// <returns>User input string or a default "EMPTY INPUT" if the user does not enter anything.</returns>
+    /// <returns>User input string or a default " " if the user does not enter anything.</returns>
     public static string Prompt(string inputMessage = "")
     {
         Console.WriteLine(inputMessage);
-        // JSS CodeReview: Does this look cleaner? Change it back if you don't like it.
         return Console.ReadLine() ?? " ";
     }
 
@@ -33,27 +32,23 @@ static class Program
         do
         {
             string inputMessage = Prompt("Enter Command:");
-            // Make all inputs from the user not case sensitive.
+            // Make all inputs from the user not case sensitive and separate by whitespace.
             string[] inputMessageArguments = inputMessage.ToUpper().Split(' ');
             // Filter the first argument/command given by the user.
             try
             {
                 switch (inputMessageArguments[0])
                 {
-                    case "ADD":
-                        // JSS CodeReview: See comments in Game class. Move catch clause here.
+                    case "ADD":                        
                         game.Add(inputMessageArguments); 
                         break;
-                    case "CHECK":
-                        // JSS CodeReview: See comment in Game class. Move catch clause here.
+                    case "CHECK":                        
                         game.Check(inputMessageArguments);
                         break;
-                    case "MAP":
-                        // JSS CodeReview: See comment in Game class. Move catch clause here.
+                    case "MAP":                        
                         game.MakeMap(inputMessageArguments);
                         break;
-                    case "PATH":
-                        // JSS CodeReview: See comment in Game class. Move catch clause here.
+                    case "PATH":                        
                         game.Path(inputMessageArguments);
                         break;
                     case "HELP":

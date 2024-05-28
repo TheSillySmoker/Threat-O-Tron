@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Threat_o_tron;
-
-// JSS CodeReview: Have you considered implementing an enum for north,south,east,west directions? I can help you with that.
 class Game
 {
     /// <summary>
@@ -62,22 +60,19 @@ class Game
         }
         else
         {
-            // JSS CodeReview: Is this error message more appropriate?
             throw new ArgumentException("Invalid obstacle type.");
         }  
     }
 
-    /// <summary>
+ /// <summary>
     /// Creates and adds a Guard Obstacle to the current Game. This method also ensures that the arguments are valid. 
     /// </summary>
     /// <param name="arguments">The arguments that this method will analyse before parsing them to instantiate a Guard.</param>
-    /// JSS CodeReview: Add exception documentation here.
+    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
     public void AddGuard(string[] arguments)
     {
         if (arguments.Length != 4)
         {
-            // JSS CodeReview: You could also print out the expected command format?
-            //                 i.e. "Expected arguments: add guard <x> <y>"
             throw new ArgumentException("Incorrect number of arguments.");
         }
 
@@ -94,7 +89,7 @@ class Game
     /// Creates and adds a Fence Obstacle to the current Game. This method also ensures that the arguments are valid.
     /// </summary>
     /// <param name="arguments">The arguments that this method will analyse before parsing them to instantiate a Fence.</param>
-    /// JSS CodeReview: Add exception documentation here.
+    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
     public void AddFence(string[] arguments)
     {
         if (arguments.Length != 6)
@@ -119,8 +114,7 @@ class Game
 
         Fence fence = new Fence(x, y, arguments[4], length);
         Obstacles.Add(fence);
-        // JSS CodeReview: Redundant assert.
-        Debug.Assert(Obstacles.Contains(fence), "The fence failed to add.");
+
         Console.WriteLine("Successfully added fence obstacle.");
     }
 
@@ -128,7 +122,7 @@ class Game
     /// Creates and adds a Sensor Obstacle to the current Game. This method also ensures that the arguments are valid.
     /// </summary>
     /// <param name="arguments">The arguments that this method will analyse before parsing them to instantiate a Sensor.</param>
-    /// JSS CodeReview: Add exception documentation here.
+    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
     public void AddSensor(string[] arguments)
     {
         if (arguments.Length != 5)
@@ -155,7 +149,7 @@ class Game
     /// Creates and adds a Sensor Obstacle to the current Game. This method also ensures that the arguments are valid.
     /// </summary>
     /// <param name="arguments">The arguments that this method will analyse before parsing them to instantiate a Sensor.</param>
-    /// JSS CodeReview: Add exception documentation here.
+    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
     public void AddCamera(string[] arguments)
     {
         if (arguments.Length != 5)
@@ -180,13 +174,15 @@ class Game
         Console.WriteLine("Successfully added camera obstacle.");
     }
 
-    // JSS CodeReview: Add documentation.
+    /// <summary>
+    /// Checks north east south and west of a point given by the user for obstacles in the game.
+    /// </summary>
+    /// <param name="arguments">The point that this will be checking around. Given by user.</param>
+    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
     public void Check(string[] arguments)
     {
         if (arguments.Length != 3)
         {
-            // JSS CodeReview: You could also print out the expected command format?
-            //                 i.e. "Expected arguments: check <x> <y>"
             throw new ArgumentException("Incorrect number of arguments.");
         }
 
@@ -199,27 +195,25 @@ class Game
         check.PrintSafeDirections();
     }
 
-    // JSS CodeReview: Add documentation.
+    /// <summary>
+    /// Takes a start and objective point and attempts to find a clear path to that while avoiding obastcles.
+    /// </summary>
+    /// <param name="arguments">The start coordinates and objective coordinates. Given by the user.</param>
+    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
     public void Path(string[] arguments)
     {
         if (arguments.Length != 5)
         {
-            // JSS CodeReview: You could also print out the expected command format?
-            //                 i.e. "Expected arguments: path <agent x> <agent y> <objective x> <objective y>"
             throw new ArgumentException("Incorrect number of arguments.");
         }
-
         if (!int.TryParse(arguments[1], out int agentX) || !int.TryParse(arguments[2], out int agentY))
         {
             throw new ArgumentException("Agent coordinates are not valid integers.");
         }
-
         if (!int.TryParse(arguments[3], out int objectiveX) || !int.TryParse(arguments[4], out int objectiveY))
         {
-            // JSS CodeReview: Do they actually need to be positive?
             throw new ArgumentException("Width and height must be valid positive integers.");
         }
-
         if(agentX == objectiveX && agentY == objectiveY)
         {
             Console.WriteLine("Agent, you are already at the objective.");
@@ -255,7 +249,6 @@ class Game
     /// Takes a list of directions and distances and writes them to console.
     /// </summary>
     /// <param name="directions">JSS: This needs to be documented.</param>
-    // JSS CodeReview: Does this need to be static?
     private static void PrintPathDirections(List<KeyValuePair<Direction, int>> directions)
     {        
         // JSS CodeReview: This wasn't printing the last direction. I've fixed it.
@@ -272,7 +265,7 @@ class Game
     /// Creates a Map and prints it.
     /// </summary>
     /// <param name="arguments">The arguments that this method will analyse before parsing them to instantiate and print a Map.</param>
-    /// JSS CodeReview: Add exception documentation here.
+    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
     public void MakeMap(string[] arguments)
     {
         if (arguments.Length != 5)
