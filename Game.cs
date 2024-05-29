@@ -29,7 +29,7 @@ class Game
     }
 
     /// <summary>
-    /// Used when the user uses the add command. 
+    /// When the user uses the add command. 
     /// Takes the arguments to see what it needs to add.
     /// </summary>
     /// <param name="arguments">The arguments that will be analysed and parsed to the specific obstacle that needs to be added.</param>
@@ -39,7 +39,7 @@ class Game
         if(arguments.Length > 1)
         {
             string obstacle = arguments[1];
-            // Ensure that the user has a valid obstacle and valid arguments.
+            // Ensure that the user has a valid obstacle argument.
             switch (obstacle)
             {
                 case "GUARD":
@@ -64,11 +64,11 @@ class Game
         }  
     }
 
- /// <summary>
+    /// <summary>
     /// Creates and adds a Guard Obstacle to the current Game. This method also ensures that the arguments are valid. 
     /// </summary>
     /// <param name="arguments">The arguments that this method will analyse before parsing them to instantiate a Guard.</param>
-    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
+    /// <exception cref="ArgumentException">Incorrect number of or invalid arguments are provided.</exception>
     public void AddGuard(string[] arguments)
     {
         if (arguments.Length != 4)
@@ -86,10 +86,10 @@ class Game
     }
 
     /// <summary>
-    /// Creates and adds a Fence Obstacle to the current Game. This method also ensures that the arguments are valid.
+    /// Creates and adds a Fence Obstacle to the current Game. Ensures that the arguments are valid.
     /// </summary>
     /// <param name="arguments">The arguments that this method will analyse before parsing them to instantiate a Fence.</param>
-    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
+    /// <exception cref="ArgumentException">Incorrect number of or invalid arguments are provided.</exception>
     public void AddFence(string[] arguments)
     {
         if (arguments.Length != 6)
@@ -112,17 +112,15 @@ class Game
             throw new ArgumentException("Length must be a valid integer greater than 0.");
         }
 
-        Fence fence = new Fence(x, y, arguments[4], length);
-        Obstacles.Add(fence);
-
+        Obstacles.Add(new Fence(x, y, arguments[4], length));
         Console.WriteLine("Successfully added fence obstacle.");
     }
 
     /// <summary>
-    /// Creates and adds a Sensor Obstacle to the current Game. This method also ensures that the arguments are valid.
+    /// Creates and adds a Sensor Obstacle to the current Game. Ensures that the arguments are valid.
     /// </summary>
     /// <param name="arguments">The arguments that this method will analyse before parsing them to instantiate a Sensor.</param>
-    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
+    /// <exception cref="ArgumentException">Incorrect number of or invalid arguments are provided.</exception>
     public void AddSensor(string[] arguments)
     {
         if (arguments.Length != 5)
@@ -140,16 +138,15 @@ class Game
             throw new ArgumentException("Range must be a valid positive number.");
         }
 
-        Sensor sensor = new Sensor(x, y, radius);
-        Obstacles.Add(sensor);
+        Obstacles.Add(new Sensor(x, y, radius));
         Console.WriteLine("Successfully added sensor obstacle.");
     }
 
     /// <summary>
-    /// Creates and adds a Sensor Obstacle to the current Game. This method also ensures that the arguments are valid.
+    /// Creates and adds a Camera Obstacle to the current Game. Ensures that the arguments are valid.
     /// </summary>
-    /// <param name="arguments">The arguments that this method will analyse before parsing them to instantiate a Sensor.</param>
-    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
+    /// <param name="arguments">The arguments that this method will analyse before parsing them to instantiate a Camera.</param>
+    /// <exception cref="ArgumentException">Incorrect number of or invalid arguments are provided.</exception>
     public void AddCamera(string[] arguments)
     {
         if (arguments.Length != 5)
@@ -161,24 +158,23 @@ class Game
         {
             throw new ArgumentException("Coordinates are not valid integers.");
         }
-        // Convert direction to uppercase for case-insensitive comparison
-        string direction = arguments[4].ToUpper(); 
+
+        string direction = arguments[4]; 
 
         if (direction != "NORTH" && direction != "EAST" && direction != "SOUTH" && direction != "WEST")
         {
             throw new ArgumentException("Direction must be 'north', 'south', 'east' or 'west'.");
         }
 
-        Camera camera = new Camera(x, y, direction);
-        Obstacles.Add(camera);
+        Obstacles.Add(new Camera(x, y, direction));
         Console.WriteLine("Successfully added camera obstacle.");
     }
 
     /// <summary>
-    /// Checks north east south and west of a point given by the user for obstacles in the game.
+    /// Checks North East South and West of a point given by the user for obstacles in the game.
     /// </summary>
     /// <param name="arguments">The point that this will be checking around. Given by user.</param>
-    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
+    /// <exception cref="ArgumentException">Incorrect number of or invalid arguments are provided.</exception>
     public void Check(string[] arguments)
     {
         if (arguments.Length != 3)
@@ -196,28 +192,58 @@ class Game
     }
 
     /// <summary>
-    /// Takes a start and objective point and attempts to find a clear path to that while avoiding obastcles.
+    /// Creates a Map and prints it.
+    /// </summary>
+    /// <param name="arguments">The arguments will analysed before parsing them to instantiate and print a Map.</param>
+    /// <exception cref="ArgumentException">Incorrect number of or invalid arguments are provided.</exception>
+    public void MakeMap(string[] arguments)
+    {
+        if (arguments.Length != 5)
+        {
+            throw new ArgumentException("Incorrect number of arguments.");
+        }
+
+        if (!int.TryParse(arguments[1], out int southWestX) || !int.TryParse(arguments[2], out int southWestY))
+        {
+            throw new ArgumentException("Coordinates are not valid integers.");
+        }
+
+        if (!int.TryParse(arguments[3], out int width) || width <= 0 || !int.TryParse(arguments[4], out int height) || height <= 0)
+        {
+            throw new ArgumentException("Width and height must be valid positive integers.");
+        }
+
+        Map map = new Map(southWestX, southWestY, width, height, Obstacles);
+        Console.WriteLine("Here is a map of Obstacles in the selected region:");
+        map.PrintMap();
+    }
+
+    /// <summary>
+    /// Takes an agent start coordinate and objective coordinate and attempts to find a clear path to that while avoiding obastcles.
     /// </summary>
     /// <param name="arguments">The start coordinates and objective coordinates. Given by the user.</param>
-    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
+    /// <exception cref="ArgumentException">Incorrect number of or invalid arguments are provided.</exception>
     public void Path(string[] arguments)
     {
         if (arguments.Length != 5)
         {
             throw new ArgumentException("Incorrect number of arguments.");
         }
+
         if (!int.TryParse(arguments[1], out int agentX) || !int.TryParse(arguments[2], out int agentY))
         {
             throw new ArgumentException("Agent coordinates are not valid integers.");
         }
+
         if (!int.TryParse(arguments[3], out int objectiveX) || !int.TryParse(arguments[4], out int objectiveY))
         {
             throw new ArgumentException("Width and height must be valid positive integers.");
         }
+
         if(agentX == objectiveX && agentY == objectiveY)
         {
             Console.WriteLine("Agent, you are already at the objective.");
-        }  
+        }     
         else
         {
             JJPath path = new JJPath(agentX, agentY, objectiveX, objectiveY, Obstacles);
@@ -259,32 +285,5 @@ class Game
             // JSS CodeReview: How does this look?
             Console.WriteLine($" klick{(directions[i].Value == 1 ? "" : "s")}.");
         }
-    }
-
-    /// <summary>
-    /// Creates a Map and prints it.
-    /// </summary>
-    /// <param name="arguments">The arguments that this method will analyse before parsing them to instantiate and print a Map.</param>
-    /// <exception cref="ArgumentException">Bad arguments given by the user.</exception>
-    public void MakeMap(string[] arguments)
-    {
-        if (arguments.Length != 5)
-        {
-            throw new ArgumentException("Incorrect number of arguments.");
-        }
-
-        if (!int.TryParse(arguments[1], out int southWestX) || !int.TryParse(arguments[2], out int southWestY))
-        {
-            throw new ArgumentException("Coordinates are not valid integers.");
-        }
-
-        if (!int.TryParse(arguments[3], out int width) || width <= 0 || !int.TryParse(arguments[4], out int height) || height <= 0)
-        {
-            throw new ArgumentException("Width and height must be valid positive integers.");
-        }
-
-        Map map = new Map(southWestX, southWestY, width, height, Obstacles);
-        Console.WriteLine("Here is a map of Obstacles in the selected region:");
-        map.PrintMap();
     }
 }

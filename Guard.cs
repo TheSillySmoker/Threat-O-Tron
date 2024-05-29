@@ -27,9 +27,8 @@ class Guard : IObstacle
     /// </summary>
     /// <param name="map">The map that will be drawn on.</param>
     public void DrawOnMap(Map map){
-        // Establish startpoint for plotting the symbol on the Map; this will be the Map's canvas coordinates, not the Game's.
-        map.GetMapCoordinates(GameX, GameY, out int MapX, out int MapY);
-        // JSS CodeReview: Removed this comment because it's not stated in any of the other obstacle classes.
-        map.CheckAndPlot(MapX, MapY, 'G');
+        // Establish point for plotting the symbol on the Map, this will be the Map's coordinates, not the Game's.
+        map.GetMapCoordinates(GameX, GameY, out int mapX, out int mapY);
+        map.CheckAndPlot(mapX, mapY, 'G');
     }
 }

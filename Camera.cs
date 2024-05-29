@@ -4,6 +4,7 @@ class Camera : IObstacle
 {
     /// <summary>
     /// GameX and GameY is the Camera's starting location in the Game.
+    /// Orientation is the direction the camera will face when drawn on a map.
     /// </summary>
     private readonly int GameX;
     private readonly int GameY;    
@@ -14,7 +15,7 @@ class Camera : IObstacle
     /// </summary>
     /// <param name="x">The X Coordinate of the camera in the Game.</param>
     /// <param name="y">The Y Coordinate of the camera in the Game.</param>
-    /// <param name="orientation">Which way the camera spans.</param>
+    /// <param name="orientation">Direction the camera faces.</param>
     public Camera(int x, int y, string orientation)
     {
         GameX = x;
@@ -28,7 +29,7 @@ class Camera : IObstacle
     /// <param name="map">The Map that will be drawn on.</param>
     public void DrawOnMap(Map map)
     {
-        // Establish startpoint for plotting the symbol on the Map; this will be the Map's canvas coordinates, not the Game's.
+        // Establish point for plotting the symbol on the Map, this will be the Map's coordinates, not the Game's.
         map.GetMapCoordinates(GameX, GameY, out int mapX, out int mapY);
 
         switch(Orientation){
@@ -51,6 +52,8 @@ class Camera : IObstacle
     /// Draws a triangle pointing North on the given Map.
     /// </summary>
     /// <param name="map">The Map that will be drawn on.</param>
+    /// <param name="mapX">The Camera's starting X Coordinate on the Map.</param>
+    /// <param name="mapY">The Camera's starting Y Coordinate on the Map.</param>
     private static void DrawNorthCamera(Map map, int mapX, int mapY){         
         // Count how many spaces there are above the starting coordinate and loop through them.  
         for(int rows = 0; rows < mapY + 1; rows++)
@@ -70,6 +73,8 @@ class Camera : IObstacle
     /// Draws a triangle pointing east on the given Map.
     /// </summary>
     /// <param name="map">The Map that will be drawn on.</param>
+    /// <param name="mapX">The Camera's starting X Coordinate on the Map.</param>
+    /// <param name="mapY">The Camera's starting Y Coordinate on the Map.</param>
     private static void DrawEastCamera(Map map, int mapX, int mapY)
     {                  
         // Count how many spaces there are east of the starting coordinate and loop through them.   
@@ -90,6 +95,8 @@ class Camera : IObstacle
     /// Draws a triangle pointing south on the given Map.
     /// </summary>
     /// <param name="map">The Map that will be drawn on.</param>
+    /// <param name="mapX">The Camera's starting X Coordinate on the Map.</param>
+    /// <param name="mapY">The Camera's starting Y Coordinate on the Map.</param>
     private static void DrawSouthCamera(Map map, int mapX, int mapY)
     {                 
         // Count how many spaces there are below the starting coordinate and loop through them.   
@@ -110,6 +117,8 @@ class Camera : IObstacle
     /// Draws a triangle pointing west on the given Map.
     /// </summary>
     /// <param name="map">The Map that will be drawn on.</param>
+    /// <param name="mapX">The Camera's starting X Coordinate on the Map.</param>
+    /// <param name="mapY">The Camera's starting Y Coordinate on the Map.</param>
     private static void DrawWestCamera(Map map, int mapX, int mapY)
     {      
         // Count how many spaces to the west there are from the starting coordinate and loop through them.   

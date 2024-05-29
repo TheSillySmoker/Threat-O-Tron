@@ -6,6 +6,7 @@ class Sensor : IObstacle
 {
     /// <summary>
     /// GameX and GameY is the location of the centre of the Sensor.
+    /// Radius will be the radius of the sensor.
     /// </summary>
     private readonly int GameX;
     private readonly int GameY;
@@ -14,8 +15,8 @@ class Sensor : IObstacle
     /// <summary>
     /// Instatiates a new Sensor.
     /// </summary>
-    /// <param name="x">The X coordinate of the centre of the Sensor.</param>
-    /// <param name="y">The Y coordinate of the centre of the Sensor.</param>
+    /// <param name="y">The Y coordinate of the centre of the Sensor in the Game.</param>
+    /// <param name="x">The X coordinate of the centre of the Sensor in the Game.</param>
     /// <param name="radius">The radius of the Sensor.</param>
     public Sensor(int x, int y, float radius){
         GameX = x;
@@ -29,10 +30,10 @@ class Sensor : IObstacle
     /// <param name="map">The Map that will be drawn on.</param>
     public void DrawOnMap(Map map)
     {
-        // Establish startpoint for plotting the symbol on the Map; this will be the Map's canvas coordinates, not the Game's.
+        // Establish point for plotting the symbol on the Map, this will be the Map's coordinates, not the Game's.
         map.GetMapCoordinates(GameX, GameY, out int mapX, out int mapY);
 
-        // Always round up as a sliver of sensor will block out the wone square in the game. 
+        // Always round up as a sliver of sensor will block out a whole square in the game. 
         int roundedRadius = (int)Math.Ceiling(Radius);
 
         // Start at the top of the circle and end at the bottom.

@@ -6,20 +6,23 @@ namespace Threat_o_tron;
 
 class Check : Map
 {
+    /// <summary>
+    /// AgentMapX and AgentMapY are the agent's coordinates on the map that will be created. 
+    /// </summary>
     private readonly int AgentMapX;
     private readonly int AgentMapY;
 
     /// <summary>
-    /// Constructs a check object that can be used for printing out which shows the surrounding unobstructed directions.
+    /// Constructs a check object that can be used to show the surrounding unobstructed directions.
+    /// Creates a 3X3 map 
     /// </summary>
-    /// <param name="agentGameX">The game X Coodinate of your agent.</param>
-    /// <param name="agentGameY">The game Y Coodinate of your agent.</param>
+    /// <param name="x">The X Coodinate of your agent in the Game.</param>
+    /// <param name="y">The Y Coodinate of your agent in the Game.</param>
     /// <param name="obstacles">Existing obstacles in the game.</param>
-    public Check(int agentGameX, int agentGameY, List<IObstacle> obstacles) : base(agentGameX -1, agentGameY -1, 3, 3, obstacles)
+    public Check(int x, int y, List<IObstacle> obstacles) : base(x -1, y -1, 3, 3, obstacles)
     {
         //The agent's position will be in the middle of the map.
-        //In a check, the map is 3x3 in size so we need to adjust up and across by 1 to get the centre. 
-        GetMapCoordinates(agentGameX, agentGameY, out int agentMapX, out int agentMapY);
+        GetMapCoordinates(x, y, out int agentMapX, out int agentMapY);
         AgentMapX = agentMapX;
         AgentMapY = agentMapY;
     }
@@ -30,8 +33,7 @@ class Check : Map
     /// <returns>A list of strings (directions).</returns>
     public List<string> GetSafeDirections()
     {
-        // JSS CodeReview: You can do List<string> safeDirections = [].
-        List<string> safeDirections = new List<string>();
+        List<string> safeDirections = [];
         if(CheckIfSafe(AgentMapX, AgentMapY-1))
         {
             safeDirections.Add("North");
@@ -60,15 +62,7 @@ class Check : Map
     private bool CheckIfSafe(int x, int y)
     {
         Debug.Assert(ContainsPoint(x,y), "Your x and y should be in the map you have created");
-        // JSS CodeReview: This could be written as "return Canvas[y,x] == '.';".
-        if (Canvas[y,x] == '.')
-        {
-            return true;
-        }
-        else
-        {
-            return false;  
-        }
+        return Canvas[y,x] == '.';
     }
     
     /// <summary>
@@ -83,7 +77,7 @@ class Check : Map
             Console.WriteLine("Agent, your location is compromised. Abort mission.");
             return;
         }
-        // Get agent's surroundings and print them if there are any.
+        // Prints safe surroundings if there are any.
         List<string> safeDirections = GetSafeDirections();
         if (safeDirections.Count > 0)
         {
@@ -96,7 +90,7 @@ class Check : Map
         else
         {
             Console.WriteLine("You cannot safely move in any direction. Abort mission.");
+            Console.WriteLine();
         }
-        Console.WriteLine();
     }
 }
