@@ -5,9 +5,20 @@ namespace Threat_o_tron;
 
 class Map
 {
+    /// <summary>
+    ///Canvas will be the array of chars that will be edited to create a map that can be displayed.
+    /// </summary>
     protected char[,] Canvas;
+
+    /// <summary>
+    /// SouthWestX and SouthWestY are the coordinates for where in the game the map will start from.
+    /// </summary>
     private readonly int SouthWestX;
     private readonly int SouthWestY;
+
+    /// <summary>
+    /// Width and height will be the dimentions of the map's canvas array.
+    /// </summary>
     public int Width{get;}          
     public int Height{get;}
 
@@ -43,7 +54,7 @@ class Map
     }
 
     /// <summary>
-    /// Prints out the map to the user.
+    /// Prints out the map to the console.
     /// </summary>
     public void PrintMap()
     {
@@ -60,8 +71,8 @@ class Map
     /// <summary>
     /// Checks to see if the given point exists on this map.
     /// </summary>
-    /// <param name="mapX">X coordinate of Obstacle in the game.</param>
-    /// <param name="mapY">Y coordinate of Obstacle in the game.</param>
+    /// <param name="mapX">X coordinate in the game.</param>
+    /// <param name="mapY">Y coordinate in the game.</param>
     /// <returns>True if the map contains the given point.</returns>
     protected bool ContainsPoint(int mapX, int mapY)
     {
@@ -69,18 +80,25 @@ class Map
     }
 
     /// <summary>
-    /// Finds where the object's starting coordinates for the map, not the game's coordinates!.
+    /// Finds a point on the map when given a point in the game.
     /// </summary>
-    /// <param name="gameX">X coordinate of the object in the game.</param>
-    /// <param name="gameY">Y coordinate of the object in the game.</param>
-    /// <param name="mapX">The start X coordinate of the object on the map.</param>
-    /// <param name="mapY">The start Y coordinate of the object on the map.</param>
+    /// <param name="gameX">X coordinate in the game.</param>
+    /// <param name="gameY">Y coordinate in the game.</param>
+    /// <param name="mapX">The X coordinate on the map.</param>
+    /// <param name="mapY">The Y coordinate on the map.</param>
     public void GetMapCoordinates(int gameX, int gameY, out int mapX, out int mapY)
     {
         mapY = Height - 1 - (gameY - SouthWestY);
         mapX = gameX - SouthWestX;
     }
 
+    /// <summary>
+    /// Finds a point in the game when given a point on the map.
+    /// </summary>
+    /// <param name="gameX">X coordinate in the game.</param>
+    /// <param name="gameY">Y coordinate in the game.</param>
+    /// <param name="mapX">The X coordinate on the map.</param>
+    /// <param name="mapY">The Y coordinate on the map.</param>
     public void GetGameCoordinates(int mapX, int mapY, out int gameX, out int gameY)
     {
         gameX = Height - 1 - mapX + SouthWestY;
@@ -88,7 +106,8 @@ class Map
     }
 
     /// <summary>
-    /// Checks to see if the given point will be on the map and plots it, if it is. This takes canvas coordinates, not Game coordinates.
+    /// Checks to see if the given point will be on the map and plots it if it is. 
+    /// Takes map coordinates, not game coordinates.
     /// </summary>
     /// <param name="mapX">X coordinate on the Map's canvas that will be plotted.</param>
     /// <param name="mapY">Y coordinate on the Map's canvas that will be plotted.</param>
