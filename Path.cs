@@ -63,22 +63,19 @@ class Path : Map
     }
 
     /// <summary>
-    /// Checks to see if the objective will be compromised before attempting to generate a path.
+    /// Checks if the objective is blocked by an Obstacle.
     /// </summary>
-    /// <returns>True if the objective is on a compromised location.</returns>
-    // JSS CodeReview: A better name would be IsObjectiveBlocked. 
-    //                 The "Is" indicates that it's a bool function without even needing to read the method declaration.
-    public bool ObjectiveIsBlocked()
-    {
-        // JSS CodeReview: This can be simplified as: "return Canvas[ObjectiveMapY, ObjectiveMapX] != '.';".
-        if (Canvas[ObjectiveMapY, ObjectiveMapX] != '.')
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+    /// <returns>True, if the objective's coordinates are on an Obstacle.</returns>
+    public bool IsObjectiveBlocked() {
+        return Canvas[ObjectiveMapY, ObjectiveMapX] != '.';
+    }
+
+    /// <summary>
+    /// Checks if the agent is on an Obstacle.
+    /// </summary>
+    /// <returns>True, if the agent's coordinates are on an Obstacle.</returns>
+    public bool IsAgentBlocked() {
+        return Canvas[AgentMapY, AgentMapX] != '.';
     }
 
     /// <summary>
@@ -110,7 +107,6 @@ class Path : Map
     {   
         GetGameCoordinates(AgentMapX, AgentMapY, out int agentGameX, out int agentGameY); //TODO: fix this
         Check check = new Check(agentGameX, agentGameY, Obstacles);
-        check.PrintSafeDirections();
         List<string> safeDirections = check.GetSafeDirections();
         foreach(string direction in safeDirections)
         {

@@ -246,7 +246,7 @@ class Game
         }     
         else
         {
-            JJPath path = new JJPath(agentX, agentY, objectiveX, objectiveY, Obstacles);
+            Path path = new Path(agentX, agentY, objectiveX, objectiveY, Obstacles);
             if(path.IsObjectiveBlocked())
             {
                 Console.WriteLine("The objective is blocked by an obstacle and cannot be reached.");
@@ -257,14 +257,14 @@ class Game
             }
             else
             {
-                if (!path.FindPath())
+                if (!path.AttemptMission())
                 {
                     Console.WriteLine("Agent, there is no safe path to your objective. Abort mission.");
                 }
                 else {
                     path.PrintMap();
                     Console.WriteLine("The following path will take you to the objective:");
-                    PrintPathDirections(path.GetDirections());
+                    PrintPathDirections(path.Directions);
                 }
             }
             
@@ -277,13 +277,14 @@ class Game
     /// <param name="directions">JSS: This needs to be documented.</param>
     private static void PrintPathDirections(List<KeyValuePair<Direction, int>> directions)
     {        
-        // JSS CodeReview: This wasn't printing the last direction. I've fixed it.
         for(int i = 0; i < directions.Count; i++)
         {
-            Console.Write($"Head {directions[i].Key} for ");
-            Console.Write($"{Convert.ToString(directions[i].Value)}");
-            // JSS CodeReview: How does this look?
-            Console.WriteLine($" klick{(directions[i].Value == 1 ? "" : "s")}.");
+            if(directions[i].Value < 0)
+            {
+                Console.Write($"Head {directions[i].Key} for ");
+                Console.Write($"{Convert.ToString(directions[i].Value)}");
+                Console.WriteLine($" klick{(directions[i].Value == 1 ? "" : "s")}.");
+            }
         }
     }
 }
