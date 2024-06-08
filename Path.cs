@@ -5,14 +5,10 @@ namespace Threat_o_tron;
 
 class Path : Map
 {
-    // JSS CodeReview: Using the object keyword makes it really hard to understand. 
-    //                 Have you considered using KeyValuePair<string, int>?
-    //                 The best thing to do would be to introduce your own class type.
-    public List<object> Directions {get; private set;}
+    public List<KeyValuePair<Game.Direction, int>> Directions {get; private set;}
     private int AgentMapX{get; set;}
     private int AgentMapY{get; set;}
 
-    // JSS CodeReview: Some part of me is thinking that these should be getter methods, but I'm not bothered either way.
     private int XKlicksFromOjective 
     {
         get
@@ -45,11 +41,9 @@ class Path : Map
     // When calling the Map constructor in base:
     // The southwest point will be the lowest Y (south) and X (west) given by the agent and the objective. Minus 1 on both X and Y to provide padding around the objective or agent. 
     // The size will be the distance between agent's and objective's Xs and Ys. Plus 3 to account for 0 based arrays and padding. 
-    // JSS CodeReview: Does this look more readable?
     : base(
-        // JSS CodeReview: Based on your above comment, I'm assuming you're setting these to 15 and 20 for testing purposes and will change them back later?
-        GetLowerNumber(agentGameX, objectiveGameX) - 15, 
-        GetLowerNumber(agentGameY, objectiveGameY) - 15, 
+        Math.Min(agentGameX, objectiveGameX) - 15, 
+        Math.Min(agentGameY, objectiveGameY) - 15, 
         Math.Abs(objectiveGameX - agentGameX) + 20, 
         Math.Abs(objectiveGameY - agentGameY) + 20, 
         obstacles
@@ -65,26 +59,7 @@ class Path : Map
 
         Obstacles = obstacles;
 
-        Directions = [];
-    }
-
-    // JSS CodeReview: Use Math.Min() instead.
-    /// <summary>
-    /// Takes two ints and returns the smaller number.
-    /// </summary>
-    /// <param name="coordinate1">One of the Ints you want to compare.</param>
-    /// <param name="coordinate2">One of the Ints you want to compare.</param>
-    /// <returns>The smaller number of the two ints</returns>
-    private static int GetLowerNumber(int coordinate1, int coordinate2)
-    {
-        if (coordinate1 < coordinate2)
-        {
-            return coordinate1;
-        }
-        else
-        {
-            return coordinate2;
-        }
+        Directions = new List<KeyValuePair<Game.Direction, int>>{};
     }
 
     /// <summary>
@@ -109,7 +84,7 @@ class Path : Map
     /// <summary>
     /// Plots agent and objective on the map and begins the attempt to find the path from agent to objective.
     /// </summary>
-    public void AttemptMission()
+    public bool AttemptMission()
     {
         // JSS CodeReview: You check if the objective is blocked, but not the agent's starting position.
         //                 You could assert that both the agent and objective's coordinates are not blocked?
@@ -127,11 +102,12 @@ class Path : Map
             MoveOnXAxis(false);
             MoveOnYAxis(false);    
         }  
+
+        return AgentMapX == ObjectiveMapX && AgentMapY == ObjectiveMapY;
     }
 
     private void ObstacleInTheWay(List<string> options)
     {   
-        Console.WriteLine("OBS");
         GetGameCoordinates(AgentMapX, AgentMapY, out int agentGameX, out int agentGameY); //TODO: fix this
         Check check = new Check(agentGameX, agentGameY, Obstacles);
         check.PrintSafeDirections();
@@ -364,8 +340,7 @@ class Path : Map
             {
                 if (nextY == 'O')
                 {
-                    Directions.Add("north");
-                    Directions.Add(counter);
+                    Directions.Add(new(Game.Direction.North, counter));
                     AgentMapX = ObjectiveMapX;
                     AgentMapY = ObjectiveMapY;
                     return;
@@ -374,8 +349,7 @@ class Path : Map
                 else
                 {
                     AgentMapY -= y-1;
-                    Directions.Add("north");
-                    Directions.Add(counter-1);
+                    Directions.Add(new(Game.Direction.North, counter - 1));
                     ObstacleInTheWay(["East","West"]);
                     return;
                 }                    
@@ -389,8 +363,7 @@ class Path : Map
         }
         //Move the agent, note direction and how far agent has moved. 
         AgentMapY -= counter;
-        Directions.Add("north");
-        Directions.Add(counter);
+        Directions.Add(new(Game.Direction.North, counter));
         MoveOnXAxis(false);
     }
 
@@ -408,8 +381,7 @@ class Path : Map
             {
                 if (nextX == 'O')
                 {
-                    Directions.Add("east");
-                    Directions.Add(counter);
+                    Directions.Add(new(Game.Direction.East, counter));
                     AgentMapX = ObjectiveMapX;
                     AgentMapY = ObjectiveMapY;
                     return;
@@ -421,8 +393,7 @@ class Path : Map
                     
                     AgentMapX += x -1;
                     Console.WriteLine($"x:{AgentMapX}, y: {AgentMapY} ");
-                    Directions.Add("east");
-                    Directions.Add(counter-1);
+                    Directions.Add(new(Game.Direction.East, counter - 1));
                     ObstacleInTheWay(["North","South"]);                   
                     return;
                 }                    
@@ -435,8 +406,7 @@ class Path : Map
             }
         }
         AgentMapX += counter;
-        Directions.Add("east");
-        Directions.Add(counter);
+        Directions.Add(new(Game.Direction.East, counter));
         MoveOnYAxis(false);
     }
 
@@ -455,8 +425,7 @@ class Path : Map
             {
                 if (nextY == 'O')
                 {
-                    Directions.Add("south");
-                    Directions.Add(counter);
+                    Directions.Add(new(Game.Direction.South, counter));
                     AgentMapX = ObjectiveMapX;
                     AgentMapY = ObjectiveMapY;
                     return;
@@ -466,8 +435,7 @@ class Path : Map
                 else
                 {
                     AgentMapY += y-1;
-                    Directions.Add("south");
-                    Directions.Add(counter-1);
+                    Directions.Add(new(Game.Direction.South, counter - 1));
                     ObstacleInTheWay(["East","West"]);
                     return;
                 }                    
@@ -480,8 +448,7 @@ class Path : Map
             }
         }
         AgentMapY += counter;
-        Directions.Add("south");
-        Directions.Add(counter);
+        Directions.Add(new(Game.Direction.South, counter));
         MoveOnXAxis(false);
     }
 
@@ -498,8 +465,7 @@ class Path : Map
             {
                 if (nextX == 'O')
                 {
-                    Directions.Add("west");
-                    Directions.Add(counter);
+                    Directions.Add(new(Game.Direction.West, counter));
                     AgentMapX = ObjectiveMapX;
                     AgentMapY = ObjectiveMapY;
                     return;
@@ -509,8 +475,7 @@ class Path : Map
                 else
                 {
                     AgentMapX -= x-1;
-                    Directions.Add("west");
-                    Directions.Add(counter-1);
+                    Directions.Add(new(Game.Direction.West, counter - 1));
                     ObstacleInTheWay(["North","South"]);
                     return;
                 }                    
@@ -523,8 +488,7 @@ class Path : Map
             }
         }
         AgentMapX -= counter;
-        Directions.Add("west");
-        Directions.Add(counter);
+        Directions.Add(new(Game.Direction.West, counter));
         MoveOnYAxis(false);
     }
 }
