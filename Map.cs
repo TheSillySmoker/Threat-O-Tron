@@ -101,10 +101,9 @@ class Map
     /// <param name="mapY">The Y coordinate on the map.</param>
     public void GetGameCoordinates(int mapX, int mapY, out int gameX, out int gameY)
     {
-        gameX = Height - 1 - mapX + SouthWestY;
-        gameY = mapY + SouthWestY;
+        gameY = (Height - 1 - mapY) + SouthWestY;
+        gameX = mapX + SouthWestX;
     }
-
     /// <summary>
     /// Checks to see if the given point will be on the map and plots it if it is. 
     /// Takes map coordinates, not game coordinates.

@@ -99,7 +99,7 @@ class Path : Map
             MoveOnXAxis(false);
             MoveOnYAxis(false);    
         }  
-
+        
         return AgentMapX == ObjectiveMapX && AgentMapY == ObjectiveMapY;
     }
 

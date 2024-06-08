@@ -279,7 +279,7 @@ class Game
     {        
         for(int i = 0; i < directions.Count; i++)
         {
-            if(directions[i].Value < 0)
+            if(directions[i].Value > 0)
             {
                 Console.Write($"Head {directions[i].Key} for ");
                 Console.Write($"{Convert.ToString(directions[i].Value)}");
