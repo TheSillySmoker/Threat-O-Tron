@@ -99,7 +99,7 @@ class Path : Map
             MoveOnXAxis(false);
             MoveOnYAxis(false);    
         }  
-        
+
         return AgentMapX == ObjectiveMapX && AgentMapY == ObjectiveMapY;
     }
 
@@ -128,6 +128,7 @@ class Path : Map
 
     private void MoveOnYAxis(bool avoidingObstacle)
     {
+        //in the case below, the agent has met with the objective.
         if(!avoidingObstacle && AgentMapY == ObjectiveMapY)
         {
             return;
@@ -153,7 +154,7 @@ class Path : Map
 
     private void MoveOnXAxis(bool avoidingObstacle)
     {
-        //in the case below, the agent has met with the objective, otherwise it is trying to get around an obstacle.
+        //in the case below, the agent has met with the objective.
         if(!avoidingObstacle && AgentMapX == ObjectiveMapX)
         {
             return;
@@ -221,7 +222,6 @@ class Path : Map
         //AND checks if the point you are checking will actually be on the map.
         while(Canvas[AgentMapY + yChange, AgentMapX - westChange] != '.' && westChange - 2 < Width -(Width - AgentMapX) - 1 )
         { 
-            Console.WriteLine(westChange);
             //If it is clear to move to the west.
             if(Canvas[AgentMapY, AgentMapX - westChange] != '.' || westChange -2 < Width -(Width - AgentMapX) - 1)
             {
@@ -265,7 +265,6 @@ class Path : Map
         {
             xChange = 1;
         }
-        Console.WriteLine($"AgentmapX: {AgentMapX}, AgentMapY: {AgentMapY}\nHeight: {Height}");
         //check the position north east/west of the agent
         while(Canvas[AgentMapY - northChange , AgentMapX + xChange] != '.')
         { 
@@ -388,7 +387,6 @@ class Path : Map
                 {
                     
                     AgentMapX += x -1;
-                    Console.WriteLine($"x:{AgentMapX}, y: {AgentMapY} ");
                     Directions.Add(new(Game.Direction.East, counter - 1));
                     ObstacleInTheWay(["North","South"]);                   
                     return;
