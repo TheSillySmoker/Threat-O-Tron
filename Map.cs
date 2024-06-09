@@ -104,6 +104,7 @@ class Map
         gameY = (Height - 1 - mapY) + SouthWestY;
         gameX = mapX + SouthWestX;
     }
+    
     /// <summary>
     /// Checks to see if the given point will be on the map and plots it if it is. 
     /// Takes map coordinates, not game coordinates.
