@@ -262,7 +262,6 @@ class Game
                     Console.WriteLine("Agent, there is no safe path to your objective. Abort mission.");
                 }
                 else {
-                    path.PrintMap();
                     Console.WriteLine("The following path will take you to the objective:");
                     PrintPathDirections(path.Directions);
                 }
@@ -274,7 +273,7 @@ class Game
     /// <summary>
     /// Takes a list of directions and distances and writes them to console.
     /// </summary>
-    /// <param name="directions">JSS: This needs to be documented.</param>
+    /// <param name="directions">A list of key value pairs that contain distances and directions.</param>
     private static void PrintPathDirections(List<KeyValuePair<Direction, int>> directions)
     {        
         for(int i = 0; i < directions.Count; i++)
