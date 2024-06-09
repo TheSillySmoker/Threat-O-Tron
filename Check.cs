@@ -4,13 +4,15 @@ using System.Diagnostics;
 
 namespace Threat_o_tron;
 
-class Check : Map
+class Check 
 {
     /// <summary>
     /// AgentMapX and AgentMapY are the agent's coordinates on the map that will be created. 
     /// </summary>
     private readonly int AgentMapX;
     private readonly int AgentMapY;
+    
+    private readonly Map CheckMap;
 
     /// <summary>
     /// Constructs a check object that can be used to show the surrounding unobstructed directions.
@@ -19,10 +21,11 @@ class Check : Map
     /// <param name="x">The X Coodinate of your agent in the Game.</param>
     /// <param name="y">The Y Coodinate of your agent in the Game.</param>
     /// <param name="obstacles">Existing obstacles in the game.</param>
-    public Check(int x, int y, List<IObstacle> obstacles) : base(x -1, y -1, 3, 3, obstacles)
+    public Check(int x, int y, List<IObstacle> obstacles)
     {
         //The agent's position will be in the middle of the map.
-        GetMapCoordinates(x, y, out int agentMapX, out int agentMapY);
+        CheckMap = new Map(x -1, y -1, 3, 3, obstacles);
+        CheckMap.GetMapCoordinates(x, y, out int agentMapX, out int agentMapY);
         AgentMapX = agentMapX;
         AgentMapY = agentMapY;
     }
@@ -61,8 +64,8 @@ class Check : Map
     /// <returns>True or false if the given coordinate is safe.</returns>
     private bool CheckIfSafe(int x, int y)
     {
-        Debug.Assert(ContainsPoint(x,y), "Your x and y should be in the map you have created");
-        return Canvas[y,x] == '.';
+        Debug.Assert(CheckMap.ContainsPoint(x,y), "Your x and y should be in the map you have created");
+        return CheckMap.Canvas[y,x] == '.';
     }
     
     /// <summary>

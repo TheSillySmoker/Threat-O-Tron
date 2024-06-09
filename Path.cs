@@ -1,15 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace Threat_o_tron;
 
 class Path : Map
 {
+    /// <summary>
+    /// A list of directions and distances the agent will need to take to reach the objective. 
+    /// </summary>
     public List<KeyValuePair<Game.Direction, int>> Directions {get; private set;}
+
+    /// <summary>
+    /// AgentMapX and AgentMapY are the agent's coordinates on the map that will be created. 
+    /// </summary>
     private int AgentMapX{get; set;}
     private int AgentMapY{get; set;}
 
+    /// <summary>
+    ///  XKlicksFromObjective is the distance between the agent and the objective on the X axis.
+    /// </summary>
     private int XKlicksFromOjective 
     {
         get
@@ -18,6 +29,9 @@ class Path : Map
         }
     }
 
+    /// <summary>
+    ///  YKlicksFromObjective is the distance between the agent and the objective on the Y axis.
+    /// </summary>
     private int YKlicksFromOjective
     {
         get
@@ -26,8 +40,19 @@ class Path : Map
         }
     }
 
+    /// <summary>
+    ///  The X coodinates for the objective.
+    /// </summary>
     private readonly int ObjectiveMapX;
+
+     /// <summary>
+    ///  The Y coodinates for the objective.
+    /// </summary>
     private readonly int ObjectiveMapY;
+
+    /// <summary>
+    ///  The existing obstacles in the game.
+    /// </summary>
     private readonly List<IObstacle> Obstacles;
 
     /// <summary>
@@ -41,12 +66,12 @@ class Path : Map
     public Path(int agentGameX, int agentGameY, int objectiveGameX, int objectiveGameY, List<IObstacle> obstacles) 
     // When calling the Map constructor in base:
     // The southwest point will be the lowest Y (south) and X (west) given by the agent and the objective. Minus 15 on both X and Y to provide padding around the objective or agent. 
-    // The size will be the distance between agent's and objective's Xs and Ys. Plus 20 to account for 0 based arrays and padding. 
+    // The size will be the distance between agent's and objective's Xs and Ys. Plus 30 to account for 0 based arrays and padding. 
     : base(
         Math.Min(agentGameX, objectiveGameX) - 15, 
         Math.Min(agentGameY, objectiveGameY) - 15, 
-        Math.Abs(objectiveGameX - agentGameX) + 20, 
-        Math.Abs(objectiveGameY - agentGameY) + 20, 
+        Math.Abs(objectiveGameX - agentGameX) + 30, 
+        Math.Abs(objectiveGameY - agentGameY) + 30, 
         obstacles
     )
     {
@@ -98,28 +123,26 @@ class Path : Map
             MoveOnXAxis(false);
             MoveOnYAxis(false);    
         }  
-        PrintMap(); //todo: remove this
-
+        PrintMap();
         return AgentMapX == ObjectiveMapX && AgentMapY == ObjectiveMapY;
     }
 
-    private void ObstacleInTheWay(List<string> options)
+    private void ObstacleInTheWay()
     {   
         GetGameCoordinates(AgentMapX, AgentMapY, out int agentGameX, out int agentGameY);
         Check check = new Check(agentGameX, agentGameY, Obstacles);
         List<string> safeDirections = check.GetSafeDirections();
-            
-        if(safeDirections.Contains(options[0]) || safeDirections.Contains(options[1]))
+        
+        //Find the most optimal direction to go. 
+        if (safeDirections.Contains("North") || safeDirections.Contains("South"))
         {
-            if (options.Contains("North") || options.Contains("South"))
-            {
-                MoveOnYAxis(true);
-            }
-            else if (options.Contains("East") || options.Contains("West"))
-            {
-                MoveOnXAxis(true);
-            }
+            MoveOnYAxis(true);
         }
+        else if (safeDirections.Contains("East") || safeDirections.Contains("West"))
+        {
+            MoveOnXAxis(true);
+        }
+            
     }
 
     ///<summary> 
@@ -134,8 +157,6 @@ class Path : Map
             return;
         }
 
-        //when the agent is in-line with the objective on the x axis but not on the y.
-        //but there is an obstacle in the way
         if(avoidingObstacle)
         {
             AvoidYAxisObstacle();
@@ -166,8 +187,6 @@ class Path : Map
             return;
         }
 
-        //when the agent is not in-line with the y.
-        //but there is an obstacle in the way
         if(avoidingObstacle)
         {
             AvoidXAxisObstacle();
@@ -192,74 +211,31 @@ class Path : Map
     /// </summary>
     private void AvoidXAxisObstacle()
     {
-        bool clearPathToTheEast = false;
-        bool clearPathToTheWest = false;
-        int eastChange = 1;
-        int westChange = 1;
         int yChange;
 
-        //When the agent needs to head north.
+        //When the agent wants to head north.
         if(YKlicksFromOjective < 0)
         {
             yChange = -1;
         }
 
-        //When agent needs to head south.
+        //When agent wants to head south.
         else 
         {
             yChange = 1;
         }
 
-        //when the point exists and it is not blocked to the east
-        if (ContainsPoint(AgentMapX + 1, AgentMapY) && Canvas[AgentMapY, AgentMapX + 1] == '.')
-        {
-            clearPathToTheEast = true;
-        }
+        KeyValuePair<bool, int> eastReconnaissance = GetEastReconnaissance(yChange);
+        KeyValuePair<bool, int> westReconnaissance = GetWestReconnaissance(yChange);
 
-        //check the position north/south east of the agent
-        //AND checks if the point you are checking will actually be on the map.
-        while(Canvas[AgentMapY + yChange, AgentMapX + eastChange] != '.' && eastChange + 2 < Width - (Width - (Width - AgentMapX)) - 1)
-        { 
-            //If it is blocked to the east.
-            //OR if it is off the map.
-            if(Canvas[AgentMapY, AgentMapX + eastChange] != '.' || eastChange +2 > Width - (Width - (Width - AgentMapX)) - 1)
-            {
-                clearPathToTheEast = false;
-                break;
-            }
-            clearPathToTheEast = true;
-            eastChange++;
-        }
-
-        //when the point exists and it is not blocked
-        if (ContainsPoint(AgentMapX - 1, AgentMapY) && Canvas[AgentMapY, AgentMapX - 1] == '.')
-        {
-            clearPathToTheWest = true;
-        }
-        
-        //check the position north/south west of the agent
-        //AND checks if the point you are checking will actually be on the map.
-        while(Canvas[AgentMapY + yChange, AgentMapX - westChange] != '.' && westChange - 2 < Width -(Width - AgentMapX) - 1 )
-        { 
-            //If it is blocked to the west.
-            //OR if it is off the map.
-            if(Canvas[AgentMapY, AgentMapX - westChange] != '.' || westChange +2 > Width -(Width - AgentMapX) - 1)
-            {
-                clearPathToTheWest = false;
-                break;
-            }  
-            clearPathToTheWest = true;
-            westChange++;
-        }
-
-        if(clearPathToTheEast)
+        if(eastReconnaissance.Key)
         {   
-           HeadEast(eastChange);
+           HeadEast(eastReconnaissance.Value);
         }
 
-        else if (clearPathToTheWest)
+        else if (westReconnaissance.Key)
         {
-           HeadWest(westChange);
+           HeadWest(westReconnaissance.Value);
         }
     }
 
@@ -269,61 +245,38 @@ class Path : Map
     /// </summary>
     private void AvoidYAxisObstacle()
     {
-
-        bool clearPathToTheSouth = false;
-
-        int southChange = 1;
         int xChange;
 
-        //When the agent needs to head East.
+        //When the agent wants to head west.
         if(XKlicksFromOjective < 0)
         {
             xChange = -1;
         }
-        //When agent needs to head West.
+        //When agent wants to head east.
         else 
         {
             xChange = 1;
         }
 
         KeyValuePair<bool, int> northReconnaissance = GetNorthReconnaissance(xChange);
-
-        //Ensure that the point you will be checking exists on the map.
-        if(ContainsPoint(AgentMapX + xChange, AgentMapY + southChange))
-        {
-            //when the point exists and it is not blocked to the south
-            if (ContainsPoint(AgentMapX, AgentMapY + 1) && Canvas[AgentMapY + 1, AgentMapX] == '.')
-            {
-                clearPathToTheSouth = true;
-            }
-            
-            //check the position south east/west of the agent
-            while(Canvas[AgentMapY + southChange, AgentMapX + xChange] != '.' && southChange + 2 < Height - (Height - (Height -AgentMapY)) )
-            { 
-                //If it is blocked to the south.
-                //OR if it is off the map.
-                if(Canvas[AgentMapY + southChange, AgentMapX] != '.' || southChange + 2 > Height - (Height - (Height -AgentMapY)) )
-                {
-                    clearPathToTheSouth = false;
-                    break;
-                }  
-                clearPathToTheSouth = true;
-                southChange++;
-            }
-        }
+        KeyValuePair<bool, int> southReconnaissance = GetSouthReconnaissance(xChange);
         
         if(northReconnaissance.Key)
         {   
             HeadNorth(northReconnaissance.Value);
         }
 
-        else if (clearPathToTheSouth)
+        else if (southReconnaissance.Key)
         {
-            HeadSouth(southChange);
+            HeadSouth(southReconnaissance.Value);
         } 
     }
 
- 
+    /// <summary>
+    /// Identifies if the agent is able to move north whilst avoiding obstacles.
+    /// </summary>
+    /// <param name="xChange">A positive or negative int which tells this if it should be checking on it's left or right.</param>
+    /// <returns>If the agent can move north and how far it should if it can.</returns>
     private KeyValuePair<bool, int> GetNorthReconnaissance(int xChange)
     {
         bool clearPathToTheNorth = false;
@@ -355,6 +308,113 @@ class Path : Map
     }
 
     /// <summary>
+    /// Identifies if the agent is able to move east whilst avoiding obstacles.
+    /// </summary>
+    /// <param name="yChange">A positive or negative int which tells this if it should be checking above or below.</param>
+    /// <returns>If the agent can move east and how far it should if it can.</returns>
+    private KeyValuePair<bool, int> GetEastReconnaissance(int yChange)
+    {
+        bool clearPathToTheEast = false;
+        int eastChange = 1;
+        //Ensure that the point you will be checking exists on the map.
+        if(ContainsPoint(AgentMapX + eastChange, AgentMapY + yChange))
+        {
+            //when the point exists and it is not blocked to the east
+            if (ContainsPoint(AgentMapX + 1, AgentMapY) && Canvas[AgentMapY, AgentMapX + 1] == '.')
+            {
+                clearPathToTheEast = true;
+            }
+
+            //check the position north/south east of the agent
+            //AND checks if the point you are checking will actually be on the map.
+            while(Canvas[AgentMapY + yChange, AgentMapX + eastChange] != '.' && eastChange + 2 < Width - (Width - (Width - AgentMapX)) - 1)
+            { 
+                //If it is blocked to the east.
+                //OR if it is off the map.
+                if(Canvas[AgentMapY, AgentMapX + eastChange] != '.' || eastChange +2 > Width - (Width - (Width - AgentMapX)) - 1)
+                {
+                    clearPathToTheEast = false;
+                    break;
+                }
+                clearPathToTheEast = true;
+                eastChange++;
+            }
+        }
+        return new(clearPathToTheEast, eastChange);
+    }
+
+    /// <summary>
+    /// Identifies if the agent is able to move south whilst avoiding obstacles.
+    /// </summary>
+    /// <param name="xChange">A positive or negative int which tells this if it should be checking on it's left or right.</param>
+    /// <returns>If the agent can move south and how far it should if it can.</returns>
+    private KeyValuePair<bool, int> GetSouthReconnaissance(int xChange)
+    {
+        bool clearPathToTheSouth = false;
+        int southChange = 1;
+        //Ensure that the point you will be checking exists on the map.
+        if(ContainsPoint(AgentMapX + xChange, AgentMapY + southChange))
+        {
+            //when the point exists and it is not blocked to the south
+            if (ContainsPoint(AgentMapX, AgentMapY + 1) && Canvas[AgentMapY + 1, AgentMapX] == '.')
+            {
+                clearPathToTheSouth = true;
+            }
+            
+            //check the position south east/west of the agent
+            while(Canvas[AgentMapY + southChange, AgentMapX + xChange] != '.' && southChange + 2 < Height - (Height - (Height -AgentMapY)) )
+            { 
+                //If it is blocked to the south.
+                //OR if it is off the map.
+                if(Canvas[AgentMapY + southChange, AgentMapX] != '.' || southChange + 2 > Height - (Height - (Height -AgentMapY)) )
+                {
+                    clearPathToTheSouth = false;
+                    break;
+                }  
+                clearPathToTheSouth = true;
+                southChange++;
+            }
+        }
+        return new(clearPathToTheSouth, southChange);
+    }
+
+    /// <summary>
+    /// Identifies if the agent is able to move west whilst avoiding obstacles.
+    /// </summary>
+    /// <param name="yChange">A positive or negative int which tells this if it should be checking above or below.</param>
+    /// <returns>If the agent can move west and how far it should if it can.</returns>
+    private KeyValuePair<bool, int> GetWestReconnaissance(int yChange)
+    {
+        bool clearPathToTheWest = false;
+        int westChange = 1;
+        //Ensure that the point you will be checking exists on the map.
+        if(ContainsPoint(AgentMapX - westChange, AgentMapY + yChange))
+        {
+            //when the point exists and it is not blocked
+            if (ContainsPoint(AgentMapX - 1, AgentMapY) && Canvas[AgentMapY, AgentMapX - 1] == '.')
+            {
+                clearPathToTheWest = true;
+            }
+            
+            //check the position north/south west of the agent
+            //AND checks if the point you are checking will actually be on the map.
+            while(Canvas[AgentMapY + yChange, AgentMapX - westChange] != '.' && westChange - 2 < Width -(Width - AgentMapX) - 1 )
+            { 
+                //If it is blocked to the west.
+                //OR if it is off the map.
+                if(Canvas[AgentMapY, AgentMapX - westChange] != '.' || westChange +2 > Width -(Width - AgentMapX) - 1)
+                {
+                    clearPathToTheWest = false;
+                    break;
+                }  
+                clearPathToTheWest = true;
+                westChange++;
+            }
+        }
+        return new(clearPathToTheWest, westChange);
+    }
+
+    /// <summary>
     /// Checks if the path is clear and moves the agent as far north toward the objective as possible
     /// </summary>
     /// <param name="klicks">How far you want to send the agent.</param>
@@ -382,7 +442,7 @@ class Path : Map
                 {
                     AgentMapY -= y-1;
                     Directions.Add(new(Game.Direction.North, counter - 1));
-                    ObstacleInTheWay(["East","West"]);
+                    ObstacleInTheWay();
                     return;
                 }                    
             }
@@ -428,7 +488,7 @@ class Path : Map
                 {            
                     AgentMapX += x -1;
                     Directions.Add(new(Game.Direction.East, counter - 1));
-                    ObstacleInTheWay(["North","South"]);                   
+                    ObstacleInTheWay();                   
                     return;
                 }                    
             }
@@ -473,7 +533,7 @@ class Path : Map
                 {
                     AgentMapY += y-1;
                     Directions.Add(new(Game.Direction.South, counter - 1));
-                    ObstacleInTheWay(["East","West"]);
+                    ObstacleInTheWay();
                     return;
                 }                    
             }
@@ -517,7 +577,7 @@ class Path : Map
                 {
                     AgentMapX -= x-1;
                     Directions.Add(new(Game.Direction.West, counter - 1));
-                    ObstacleInTheWay(["North","South"]);
+                    ObstacleInTheWay();
                     return;
                 }                    
             }

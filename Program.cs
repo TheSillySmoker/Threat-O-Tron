@@ -31,7 +31,7 @@ static class Program
         PrintValidCommands();
         do
         {
-            string inputMessage = Prompt("Enter Command:");
+            string inputMessage = Prompt("Enter command:");
             // Make all inputs from the user not case sensitive and separate by whitespace.
             string[] inputMessageArguments = inputMessage.ToUpper().Split(' ');
             // Filter the first argument/command given by the user.

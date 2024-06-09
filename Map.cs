@@ -8,7 +8,7 @@ class Map
     /// <summary>
     ///Canvas will be the array of chars that will be edited to create a map that can be displayed.
     /// </summary>
-    protected char[,] Canvas;
+    public readonly char[,] Canvas;
 
     /// <summary>
     /// SouthWestX and SouthWestY are the coordinates for where in the game the map will start from.
@@ -74,7 +74,7 @@ class Map
     /// <param name="mapX">X coordinate in the game.</param>
     /// <param name="mapY">Y coordinate in the game.</param>
     /// <returns>True if the map contains the given point.</returns>
-    protected bool ContainsPoint(int mapX, int mapY)
+    public bool ContainsPoint(int mapX, int mapY)
     {
         return mapX <= Width - 1 && mapX >= 0 && mapY <= Height - 1 && mapY >= 0;
     }
@@ -104,7 +104,7 @@ class Map
         gameY = (Height - 1 - mapY) + SouthWestY;
         gameX = mapX + SouthWestX;
     }
-    
+
     /// <summary>
     /// Checks to see if the given point will be on the map and plots it if it is. 
     /// Takes map coordinates, not game coordinates.

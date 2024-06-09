@@ -214,7 +214,7 @@ class Game
         }
 
         Map map = new Map(southWestX, southWestY, width, height, Obstacles);
-        Console.WriteLine("Here is a map of Obstacles in the selected region:");
+        Console.WriteLine("Here is a map of obstacles in the selected region:");
         map.PrintMap();
     }
 
@@ -237,7 +237,7 @@ class Game
 
         if (!int.TryParse(arguments[3], out int objectiveX) || !int.TryParse(arguments[4], out int objectiveY))
         {
-            throw new ArgumentException("Width and height must be valid positive integers.");
+            throw new ArgumentException("Objective coordinates are not valid integers.");
         }
 
         if(agentX == objectiveX && agentY == objectiveY)
@@ -259,7 +259,7 @@ class Game
             {
                 if (!path.AttemptMission())
                 {
-                    Console.WriteLine("Agent, there is no safe path to your objective. Abort mission.");
+                    Console.WriteLine("There is no safe path to the objective.");
                 }
                 else {
                     Console.WriteLine("The following path will take you to the objective:");
@@ -280,7 +280,7 @@ class Game
         {
             if(directions[i].Value > 0)
             {
-                Console.Write($"Head {directions[i].Key} for ");
+                Console.Write($"Head {directions[i].Key.ToString().ToLower()} for ");
                 Console.Write($"{Convert.ToString(directions[i].Value)}");
                 Console.WriteLine($" klick{(directions[i].Value == 1 ? "" : "s")}.");
             }
